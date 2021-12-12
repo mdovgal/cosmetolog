@@ -19,6 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::namespace('Api')->group(function () {
+    Route::get('/catalog', 'CatalogController@index');
+
+
     Route::post('/users', 'UsersController@store');
     Route::get('/users', 'UsersController@index');
     Route::get('/users/{user}', 'UsersController@show');

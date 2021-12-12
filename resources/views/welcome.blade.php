@@ -71,9 +71,16 @@
                         <!-- <a href="{{ url('/home') }}">Home</a>  -->
 
                         <li class="nav-item">
-                            <a id="navbarDropdown" class="nav-link" href="#" role="button" v-pre>
+                         @if (Auth::user()->role == 'admin')
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('/admin') }}" role="button" v-pre>
                                 Вітаємо, {{ Auth::user()->name }}! Your role: {{ Auth::user()->role }}
                             </a>
+                         @else
+                         <a id="navbarDropdown" class="nav-link" href="#" role="button" v-pre>
+                             Вітаємо, {{ Auth::user()->name }}! Your role: {{ Auth::user()->role }}
+                         </a>
+                        @endif
+
                         </li><li>
                             <a class="nav-link"  role="button" href="{{ route('logout') }}"
                                onclick="event.preventDefault();

@@ -1,23 +1,43 @@
 //require('./bootstrap');
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+//import 'materialize-css/dist/js/materialize.min'
 
 Vue.use(VueRouter)
 
 import App from './views/App'
+import ProductCatalog from './views/admin/ProductCatalog'
+import CosmetologsList from './views/admin/CosmetologsList'
+import CustomersList from './views/admin/CustomersList'
+import Orders from './views/admin/Orders'
 import Hello from './views/Hello'
+
 import Home from './views/Home'
 import Articles from './views/Articles'
 import UsersIndex from './views/UsersIndex'
 import UsersEdit from './views/UsersEdit'
 import UsersCreate from './views/UsersCreate'
 import ArticleCreate from './views/ArticleCreate'
+
 import NotFound from './views/NotFound'
 
 const router = new VueRouter({
     mode: 'history',
     routes: [
-        {path: '/admin', name: 'users.index',component: UsersIndex
+        {path: '/admin', name: 'product.catalog',component: ProductCatalog
+        },
+        {path: '/admin/cosmetologs', name: 'cosmetologs.list',component: CosmetologsList
+        },
+        {path: '/admin/customers', name: 'customers.list',component: CustomersList
+        },
+        {path: '/admin/orders', name: 'orders',component: Orders
+        },
+        {path: '/admin/hello', name: 'hello', component: Hello
+        },
+        { path: '/404', name: '404', component: NotFound
+        },
+        {path: '/admin/users', name: 'users.index',component: UsersIndex
         },
         {path: '/admin/hello', name: 'hello', component: Hello,
         },
@@ -29,7 +49,6 @@ const router = new VueRouter({
         },
         {path: '/admin/articles', name: 'articles', component: Articles,
         },
-        { path: '/404', name: '404', component: NotFound },
     ],
 });
 

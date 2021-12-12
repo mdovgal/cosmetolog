@@ -7,14 +7,19 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Адмінка Блогу') }}</title>
+    <title>{{ config('app.name', 'Адмінка') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin_app.css') }}" rel="stylesheet">
+    <!-- materialize -->
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <style>
 .router-link-exact-active{font-size: 20px;
                     font-weight: bold;
@@ -22,65 +27,56 @@
 </style>
 </head>
 <body>
-<div>
-    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">
-                Адмінка
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- Left Side Of Navbar -->
-                <ul class="navbar-nav mr-auto">
+<nav class="light-blue accent-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="{{ url('/') }}" class="brand-logo">Logo</a>
+    @guest
+        <ul class="right hide-on-med-and-down">
+            <li><a href="{{ route('login') }}">Вхід</a></li>
+            @if (Route::has('register'))
+                <li>
+                    <a href="{{ route('register') }}">Зареєструватись</a>
+                </li>
+            @endif
+        </ul>
+    @else
+      <ul class="right hide-on-med-and-down text-blue text-darken-4">
+        <li><a class="text-blue text-darken-4" href="{{ url('/admin') }}">Вітаємо, {{ Auth::user()->name }}! [{{ Auth::user()->role }}]</a></li>
+        <li><a class="text-blue text-darken-4" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            Вихід
+        </a></li>
+      </ul>
 
-                </ul>
+      <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+          @csrf
+      </form>
+      @endguest
+    </div>
+  </nav>
 
-                <!-- Right Side Of Navbar -->
-                <ul class="navbar-nav ml-auto">
-                    <!-- Authentication Links -->
-                    @guest
-                    <!--
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('Вхід') }}</a>
-                        </li>
-
-                        @if (Route::has('register'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            </li>
-                        @endif
-                        -->
-                    @else
-                        <li class="nav-item">
-                            <a id="navbarDropdown" class="nav-link" href="#" role="button" v-pre>
-                                Вітаємо, {{ Auth::user()->name }}! Your role: {{ Auth::user()->role }}
-                            </a>
-                        </li><li>
-                            <a class="nav-link"  role="button" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                {{ __('Вихід') }}
-                            </a>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </li>
-                    @endguest
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <main class="py-4 container">
+    <main class="container">
         <div id="app">
             <app></app>
           </div>
     </main>
-</div>
+
+    <footer class="page-footer light-blue accent-1">
+        <div class="footer-copyright">
+          <div class="container">
+          Made by <a class="text-blue text-darken-4" href="http://materializecss.com">Materialize</a>
+          </div>
+        </div>
+      </footer>
+<style>
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+main {
+  flex: 1 0 auto;
+}
+</style>
 
   <script src="{{ mix('js/admin_app.js') }}"></script>
 </body>

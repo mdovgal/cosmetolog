@@ -51,9 +51,14 @@
     </div>
 </template>
 <script>
+    import M from 'materialize-css';
+    import 'materialize-css/dist/css/materialize.min.css';
     import axios from 'axios';
+    import JQuery from 'jquery';
+    var $ = JQuery;
 
     export default {
+        select_build: false,
         data() {
             return {
                 error_message: null,
@@ -70,6 +75,20 @@
                 error: null
             };
         },
+
+         mounted() {
+
+         },
+         updated() {
+            if(! this.select_build){
+                var elems = document.querySelectorAll('select');
+                var instances = M.FormSelect.init(elems);
+
+                M.toast({html: 'Init Select!'})
+
+                this.select_build = true;
+            }
+         },
         beforeRouteEnter (to, from, next){
             axios
                 .get('/api/category')
@@ -85,6 +104,9 @@
         methods: {
             setCategoryData(response){
                 this.categories = response.data.data;
+var elems = document.querySelectorAll('select');
+console.log('select', elems);
+        //var instances = M.FormSelect.init(elems);
             },
             onSubmit($event) {
                 this.saving = true
