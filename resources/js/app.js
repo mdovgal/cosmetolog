@@ -11,7 +11,7 @@ import Articles from './views/Articles'
 import UsersIndex from './views/UsersIndex'
 import UsersEdit from './views/UsersEdit'
 import UsersCreate from './views/UsersCreate'
-import ArticleCreate from './views/ArticleCreate'
+import ArticleCreate from './views/ArticleCreate2'
 import NotFound from './views/NotFound'
 
 const router = new VueRouter({

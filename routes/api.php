@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::namespace('Api')->group(function () {
     Route::get('/catalog', 'CatalogController@index');
+    Route::put('/catalog/{catalog}', 'CatalogController@update');
 
 
     Route::post('/users', 'UsersController@store');

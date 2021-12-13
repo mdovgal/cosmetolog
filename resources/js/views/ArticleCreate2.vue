@@ -84,8 +84,6 @@
                 var elems = document.querySelectorAll('select');
                 var instances = M.FormSelect.init(elems);
 
-                M.toast({html: 'Init Select!'})
-
                 this.select_build = true;
             }
          },
