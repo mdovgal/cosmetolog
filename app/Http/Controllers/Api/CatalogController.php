@@ -22,12 +22,19 @@ class CatalogController extends Controller
     {
         $data = $request->validate([
             'title' => 'required',
-//            'parent_id' => 'required',
+            'parent_id' => 'required',
         ]);
 
         $catalog->update($data);
 
         return new CatalogResource($catalog);
+    }
+
+    public function delete(Catalog $catalog)
+    {
+        //$catalog->articles()->delete();
+        $catalog->delete();
+        return response(null, 204);
     }
 
     public function buildTree($items)

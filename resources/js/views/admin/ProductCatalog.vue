@@ -13,14 +13,14 @@
                     <div class="collapsible-header"><i class="material-icons">whatshot</i>
                         {{ item.title }}
                         <i class="material-icons right md-24" @click="editCategory(item)">edit</i>
-                        <i class="material-icons right md-24">delete</i>
+                        <i class="material-icons right md-24" @click="deleteCategory(item)">delete</i>
                     </div>
                     <div class="collapsible-body" v-if="item.parent_id == 0">
                         <ul class="collection">
                             <li class="collection-item" v-for="sub_item in item.children">
                                 {{ sub_item.title }}
-                                <i class="material-icons right md-18">delete</i>
-                                <i class="material-icons right md-18">edit</i>
+                                <i class="material-icons right md-18" style="cursor:pointer;" @click="deleteCategory(sub_item)">delete</i>
+                                <i class="material-icons right md-18" style="cursor:pointer;" @click="editCategory(sub_item)">edit</i>
                             </li>
                         </ul>
                     </div>
@@ -31,17 +31,18 @@
             <div id="modal1" class="modal" ref="selectedRecordModal">
                 <div class="modal-content">
                     <h6>Редагувати категорію</h6>
-                    <div v-if="error_message" class="alert alert-danger">{{ error_message }}</div>
+                    <div v-if="error_message" class="alert alert-danger" style="color:red;">{{ error_message }}</div>
                     <form id="modal1_form" v-if="selectedRecord">
                         <input type="text"
                                id="id"
                                name="id"
                                v-model="selectedRecord.id"
                                class="form-control">
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label for="title">Батьківська категорія</label>
-                            <select name="parent_id" id="parent_id">
+                            <select name="parent_id" id="category_select">
                                 <option value="0" selected="selected">
+                                    Top level
                                 </option>
                                 <option v-for="item in catalog" v-if="item.parent_id == 0" :value="item.id" :selected="{ 'selected': item.id == selectedRecord.parent_id }">
                                     {{ item.title }}
@@ -115,27 +116,21 @@
                 var elem = document.querySelectorAll('.collapsible');
                 var instances = M.Collapsible.init(elem);
 
-                var elems_select = document.querySelectorAll('select');
-                var instances_select = M.FormSelect.init(elems_select);
-
                 var elems_btn = document.querySelectorAll('.fixed-action-btn');
                 var instances_btn = M.FloatingActionButton.init(elems_btn, {direction:'right'});
 
-//                var elems_modal = document.querySelectorAll('.modal');
-//                var instances_modal = M.Modal.init(elems_modal);
                 var elems_modal = document.getElementById('modal1');
                 var instances_init_modal = M.Modal.init(elems_modal);
                 var instance_modal = M.Modal.getInstance(elems_modal);
-console.log('instances_modal', instances_init_modal);
-console.log('instance_modal', instance_modal);
-console.log('-------------------------------------------');
-//                $(".add_catalog_head").off().on('click', function(){
-//                    alert('Click');
-//                    return false;
-//                });
 
                 this.is_m_build = true;
             }
+
+            var elems_select = document.getElementById('category_select');
+            if( elems_select ){
+                var instances_select = M.FormSelect.init(elems_select);
+            }
+
 
             M.toast({html: 'Updated Content now......'})
         },
@@ -164,12 +159,11 @@ console.log('-------------------------------------------');
             instance_modal.open();
         },
         saveCategory(){
-console.log( '~~~ saveCategory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-console.log( $("#modal1_form"));
-
             var form = document.getElementById("modal1_form");
-console.log(form.id.value);
-console.log(form.title.value);
+            var parent_id = 0;
+            if(form.parent_id){
+                parent_id = form.parent_id.value;
+            }
 
             var elems_modal = document.getElementById('modal1');
             var instance_modal = M.Modal.getInstance(elems_modal);
@@ -178,20 +172,39 @@ console.log(form.title.value);
             this.error_message = null;
 
             api.updateCatalog(form.id.value, {
-                title: form.title.value
+                title: form.title.value,
+                parent_id: parent_id
             }).then((response) => {
                 M.toast({html: 'Категорія відредагована!'})
-                //this.user = response.data.data;
+
                 instance_modal.close();
 
                 this.is_m_build = false;
                 this.$router.push({ name: 'product.catalog', params: {} });
             }).catch(error => {
                 this.error_message = error.response.data.message || error.message;
-//console.log('~~~ ERRORS: ~~~~~~~~~~~~~~~~~~~');
-//console.log(error.response.data.errors);
-//console.log(error.message);
             }).then(() => this.saving = false);
+        },
+        deleteCategory(item){
+            if(item.parent_id == 0){
+                var confirm_message = 'Ви дійсно бажаєте видалити категорію '+item.title +','+"\n"+' її підкатегорії та продукти?'
+            }else{
+                var confirm_message = 'Ви дійсно бажаєте видалити категорію '+item.title +','+"\n"+' та її продукти?'
+            }
+
+            if(confirm( confirm_message )){
+                this.saving = true;
+                api.deleteCategory(item.id )
+                .then((response) => {
+                    M.toast({html: 'Категорія видалена!'})
+
+                    this.is_m_build = false;
+                    //this.$router.go();
+                    this.$router.push({ name: 'product.catalog', params: {} });
+                }).catch(error => {
+                    this.error_message = error.response.data.message || error.message;
+                }).then(() => {this.saving = false; this.is_m_build = false;});
+            }
         },
         cancelCategory(){
             this.selectedRecord = null;
