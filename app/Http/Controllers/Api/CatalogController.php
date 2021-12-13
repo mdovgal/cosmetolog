@@ -33,6 +33,7 @@ class CatalogController extends Controller
     public function delete(Catalog $catalog)
     {
         //$catalog->articles()->delete();
+        $catalog->children()->delete();
         $catalog->delete();
         return response(null, 204);
     }
@@ -48,5 +49,18 @@ class CatalogController extends Controller
         }
 
         return $items->where('parent_id', null);
+    }
+
+    public function create(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'required',
+            'parent_id' => 'required'
+        ]);
+
+        return new CatalogResource(Catalog::create([
+            'title' => $data['title'],
+            'parent_id' => $data['parent_id'],
+        ]));
     }
 }

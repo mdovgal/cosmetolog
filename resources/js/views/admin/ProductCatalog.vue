@@ -7,9 +7,12 @@
         <div v-if="! loaded">Завантаження...</div>
 
         <div class="col s3" style="margin-top: 20px;">
-            <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;"><i class="material-icons left">add</i>Додати категорію</a>
+            <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addCategory()">
+                <i class="material-icons left">add</i>
+                Додати категорію
+            </a>
             <ul class="collapsible">
-                <li v-for="item in catalog" v-if="item.parent_id == 0" :class="{ 'active': item.id == catalog[0].id }">
+                <li v-for="item in catalog" v-if="item.parent_id == 0" :class="{ 'active': item.id == catalog[0].id }"  :key="item.id">
                     <div class="collapsible-header"><i class="material-icons">whatshot</i>
                         {{ item.title }}
                         <i class="material-icons right md-24" @click="editCategory(item)">edit</i>
@@ -17,7 +20,7 @@
                     </div>
                     <div class="collapsible-body" v-if="item.parent_id == 0">
                         <ul class="collection">
-                            <li class="collection-item" v-for="sub_item in item.children">
+                            <li class="collection-item" v-for="sub_item in item.children" :key="sub_item.id">
                                 {{ sub_item.title }}
                                 <i class="material-icons right md-18" style="cursor:pointer;" @click="deleteCategory(sub_item)">delete</i>
                                 <i class="material-icons right md-18" style="cursor:pointer;" @click="editCategory(sub_item)">edit</i>
@@ -33,7 +36,7 @@
                     <h6>Редагувати категорію</h6>
                     <div v-if="error_message" class="alert alert-danger" style="color:red;">{{ error_message }}</div>
                     <form id="modal1_form" v-if="selectedRecord">
-                        <input type="text"
+                        <input type="hidden"
                                id="id"
                                name="id"
                                v-model="selectedRecord.id"
@@ -107,7 +110,12 @@
                 error: null,
                 error_message: null,
                 is_m_build:false,
-                selectedRecord: null
+                selectedRecord: null,
+                category:{
+                    id: null,
+                    title: "",
+                    id_parent: 0
+                }
             };
         },
         updated(){
@@ -132,7 +140,7 @@
             }
 
 
-            M.toast({html: 'Updated Content now......'})
+            //M.toast({html: 'Updated Content now......'})
         },
         beforeRouteEnter (to, from, next){
             getCatalog( (err, data) => {
@@ -140,16 +148,22 @@
         });
     },
     beforeRouteUpdate (to, from, next) {
-        this.catalog = null
+        //this.catalog = null
         getCatalog((err, data) => {
             this.setData(err, data);
         next();
     });
     },
     methods: {
+        addCategory(){
+            var elems_modal = document.getElementById('modal1');
+            var instance_modal = M.Modal.getInstance(elems_modal);
+
+            this.selectedRecord = Vue.util.extend({}, this.category);
+
+            instance_modal.open();
+        },
         editCategory(item){
-            var elem_select = document.getElementById('parent_id');
-            var inst_select = M.FormSelect.init(elem_select);
 
             var elems_modal = document.getElementById('modal1');
             var instance_modal = M.Modal.getInstance(elems_modal);
@@ -159,31 +173,47 @@
             instance_modal.open();
         },
         saveCategory(){
+            var elems_modal = document.getElementById('modal1');
+            var instance_modal = M.Modal.getInstance(elems_modal);
+
             var form = document.getElementById("modal1_form");
             var parent_id = 0;
             if(form.parent_id){
                 parent_id = form.parent_id.value;
             }
 
-            var elems_modal = document.getElementById('modal1');
-            var instance_modal = M.Modal.getInstance(elems_modal);
-
             this.saving = true;
             this.error_message = null;
 
-            api.updateCatalog(form.id.value, {
-                title: form.title.value,
-                parent_id: parent_id
-            }).then((response) => {
-                M.toast({html: 'Категорія відредагована!'})
+            if(form.id.value != ''){
+                api.updateCatalog(form.id.value, {
+                    title: form.title.value,
+                    parent_id: parent_id
+                }).then((response) => {
+                    M.toast({html: 'Категорія відредагована!'})
 
-                instance_modal.close();
+                    instance_modal.close();
 
-                this.is_m_build = false;
-                this.$router.push({ name: 'product.catalog', params: {} });
-            }).catch(error => {
-                this.error_message = error.response.data.message || error.message;
-            }).then(() => this.saving = false);
+                    this.is_m_build = false;
+                    this.$router.push({ name: 'product.catalog', params: {} });
+                }).catch(error => {
+                        this.error_message = error.response.data.message || error.message;
+                }).then(() => this.saving = false);
+            }else{
+                api.createCatalog({
+                    title: form.title.value,
+                    parent_id: parent_id
+                }).then((response) => {
+                    M.toast({html: 'Категорія додана!'})
+
+                    instance_modal.close();
+
+                    this.is_m_build = false;
+                    this.$router.push({ name: 'product.catalog', params: {} });
+                }).catch(error => {
+                    this.error_message = error.response.data.message || error.message;
+                }).then(() => this.saving = false);
+            }
         },
         deleteCategory(item){
             if(item.parent_id == 0){
@@ -199,15 +229,17 @@
                     M.toast({html: 'Категорія видалена!'})
 
                     this.is_m_build = false;
-                    //this.$router.go();
-                    this.$router.push({ name: 'product.catalog', params: {} });
-                }).catch(error => {
-                    this.error_message = error.response.data.message || error.message;
-                }).then(() => {this.saving = false; this.is_m_build = false;});
+                    this.$router.go();
+                    //this.$router.push({ name: 'product.catalog', params: {} });
+                    //this.$router.push("/admin").catch(()=>{});
+
+                    //app.$forceUpdate();
+                });
             }
         },
         cancelCategory(){
-            this.selectedRecord = null;
+            this.saving = false;
+            this.error_message = null;
         },
         setData(err, { data: catalog_items }) {
             if (err) {
