@@ -24,6 +24,8 @@ Route::namespace('Api')->group(function () {
     Route::delete('/catalog/{catalog}', 'CatalogController@delete');
     Route::post('/catalog', 'CatalogController@create');
 
+    Route::get('/products/category/{category}', 'ProductController@create');
+
 
     Route::post('/users', 'UsersController@store');
     Route::get('/users', 'UsersController@index');

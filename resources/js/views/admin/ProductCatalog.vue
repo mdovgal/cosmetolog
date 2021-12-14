@@ -6,7 +6,7 @@
         <div v-if="message" class="alert alert-success">{{ message }}</div>
         <div v-if="! loaded">Завантаження...</div>
 
-        <div class="col s3" style="margin-top: 20px;">
+        <div class="col s4" style="margin-top: 20px;">
             <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addCategory()">
                 <i class="material-icons left">add</i>
                 Додати категорію
@@ -14,14 +14,14 @@
             <ul class="collapsible">
                 <li v-for="item in catalog" v-if="item.parent_id == 0" :class="{ 'active': item.id == catalog[0].id }"  :key="item.id">
                     <div class="collapsible-header"><i class="material-icons">whatshot</i>
-                        {{ item.title }}
+                            <span @click="viewProductList(item)">{{ item.title }}</span>
                         <i class="material-icons right md-24" @click="editCategory(item)">edit</i>
                         <i class="material-icons right md-24" @click="deleteCategory(item)">delete</i>
                     </div>
                     <div class="collapsible-body" v-if="item.parent_id == 0">
                         <ul class="collection">
                             <li class="collection-item" v-for="sub_item in item.children" :key="sub_item.id">
-                                {{ sub_item.title }}
+                                <span  @click="viewProductList(sub_item)">{{ sub_item.title }}</span>
                                 <i class="material-icons right md-18" style="cursor:pointer;" @click="deleteCategory(sub_item)">delete</i>
                                 <i class="material-icons right md-18" style="cursor:pointer;" @click="editCategory(sub_item)">edit</i>
                             </li>
@@ -30,24 +30,24 @@
                 </li>
             </ul>
 
-            <!-- Modal Structure -->
-            <div id="modal1" class="modal" ref="selectedRecordModal">
+<!-- START: Modal Structure -->
+            <div id="modal1" class="modal" ref="selectedCategoryRecordModal">
                 <div class="modal-content">
                     <h6>Редагувати категорію</h6>
                     <div v-if="error_message" class="alert alert-danger" style="color:red;">{{ error_message }}</div>
-                    <form id="modal1_form" v-if="selectedRecord">
+                    <form id="modal1_form" v-if="selectedCategoryRecord">
                         <input type="hidden"
                                id="id"
                                name="id"
-                               v-model="selectedRecord.id"
+                               v-model="selectedCategoryRecord.id"
                                class="form-control">
                         <div class="form-group">
-                            <label for="title">Батьківська категорія</label>
+                            <label for="title">Категорія</label>
                             <select name="parent_id" id="category_select">
-                                <option value="0" selected="selected">
+                                <option value="0" :selected="selectedCategoryRecord.parent_id == 0">
                                     Top level
                                 </option>
-                                <option v-for="item in catalog" v-if="item.parent_id == 0" :value="item.id" :selected="{ 'selected': item.id == selectedRecord.parent_id }">
+                                <option v-for="item in catalog" v-if="item.parent_id == 0" :value="item.id" :selected="item.id == selectedCategoryRecord.parent_id ">
                                     {{ item.title }}
                                 </option>
                             </select>
@@ -57,23 +57,42 @@
                             <input type="text"
                                    id="title"
                                    name="title"
-                                   v-model="selectedRecord.title"
+                                   v-model="selectedCategoryRecord.title"
                                    class="form-control"
                                    required="">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <a href="#!" class="modal-close waves-effect waves-red btn-flat" @click="cancelCategory()">Cancel</a>
-                    <a href="#!" class="waves-effect waves-green btn-flat" :disabled="saving" @click="saveCategory()">
+                    <a href="" class="modal-close waves-effect waves-red btn-flat" @click="cancelCategory()">Cancel</a>
+                    <a href="" class="waves-effect waves-green btn-flat" :disabled="saving" @click="saveCategory()">
                     {{ saving ? 'Зберігається...' : 'Зберегти' }}
                     </a>
                 </div>
             </div>
+<!-- END: Modal Structure -->
         </div>
 
-        <div class="col s9" style="margin-top: 20px; padding-left: 25px;">
-            Teal page content
+        <div class="col s8" style="margin-top: 20px; padding-left: 25px;"  v-if="selectedCategoryRecord"  ref="selectedCategoryRecordModal">
+            <div class="row">
+                <div class="col s9">
+                    <h5 style="margin-top: 0px;">Категорія {{ selectedCategoryRecord.title }}</h5>
+                </div>
+                <div class="col s3">
+                    <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addCategory()">
+                        <i class="material-icons left">add</i>
+                        Додати продукт
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <div v-if="products"> Product list</div>
+                    <div v-else>У категорії продуктів не знайдено</div>
+                </div>
+            </div>
+
+
         </div>
 
 </div>
@@ -87,11 +106,22 @@
     let $ = JQuery;
 
     import api from '../../api/catalog';
+//    import api from '../../api/products';
 //    $( document ).ready(function() {});
 
     const getCatalog = (callback) => {
         axios
             .get('/api/catalog', {})
+            .then(response => {
+                callback(null, response.data);
+            }).catch(error => {
+                callback(error, error.response.data);
+            });
+    };
+
+    const getProducts = (callback) => {
+        axios
+            .get('/api/products', {})
             .then(response => {
                 callback(null, response.data);
             }).catch(error => {
@@ -106,11 +136,14 @@
                 saving: false,
                 loaded: true,
                 catalog: null,
+                products: null,
+                popup_catalog: null,
                 meta: null,
                 error: null,
                 error_message: null,
                 is_m_build:false,
-                selectedRecord: null,
+                is_m_select_build: false,
+                selectedCategoryRecord: null,
                 category:{
                     id: null,
                     title: "",
@@ -135,8 +168,10 @@
             }
 
             var elems_select = document.getElementById('category_select');
-            if( elems_select ){
+            if( elems_select && !this.is_m_select_build){
                 var instances_select = M.FormSelect.init(elems_select);
+                M.toast({html: 'M-SELECT is build now!'})
+                this.is_m_select_build = true;
             }
 
 
@@ -151,24 +186,36 @@
         //this.catalog = null
         getCatalog((err, data) => {
             this.setData(err, data);
-        next();
-    });
+            next();
+        });
     },
     methods: {
+// Products methods ------------------------------------------------------
+        viewProductList(category_item){
+console.log('~~~> viewProductList ~~~~~~~~~~~',category_item.id, category_item.children);
+            //selectedCategoryRecord
+            this.selectedCategoryRecord = Vue.util.extend({}, category_item);
+
+            api.getCategoryProducts(category_item.id )
+            .then((response) => {
+console.log('~~~~> getCategoryProducts ~~~~~~~~~~~~~~~~', response.data);
+            });
+        },
+// Categiries methods ------------------------------------------------------
         addCategory(){
+            this.popup_catalog = this.catalog;
             var elems_modal = document.getElementById('modal1');
             var instance_modal = M.Modal.getInstance(elems_modal);
 
-            this.selectedRecord = Vue.util.extend({}, this.category);
-
+            this.selectedCategoryRecord = Vue.util.extend({}, this.category);
             instance_modal.open();
         },
         editCategory(item){
-
+            this.popup_catalog = this.catalog;
             var elems_modal = document.getElementById('modal1');
             var instance_modal = M.Modal.getInstance(elems_modal);
 
-            this.selectedRecord = Vue.util.extend({}, item);
+            this.selectedCategoryRecord = Vue.util.extend({}, item);
 
             instance_modal.open();
         },
@@ -195,6 +242,8 @@
                     instance_modal.close();
 
                     this.is_m_build = false;
+                    this.popup_catalog = null;
+                    this.is_m_select_build = false;
                     this.$router.push({ name: 'product.catalog', params: {} });
                 }).catch(error => {
                         this.error_message = error.response.data.message || error.message;
@@ -209,6 +258,8 @@
                     instance_modal.close();
 
                     this.is_m_build = false;
+                    this.popup_catalog = null;
+                    this.is_m_select_build = false;
                     this.$router.push({ name: 'product.catalog', params: {} });
                 }).catch(error => {
                     this.error_message = error.response.data.message || error.message;
@@ -240,12 +291,19 @@
         cancelCategory(){
             this.saving = false;
             this.error_message = null;
+            this.is_m_select_build = false;
+            this.selectedCategoryRecord = null;
+            this.popup_catalog = null;
         },
         setData(err, { data: catalog_items }) {
             if (err) {
                 this.error = err.toString();
             } else {
                 this.catalog = catalog_items;
+//                this.selectedCategoryRecord = Vue.util.extend({}, catalog_items[0]);
+                this.selectedCategoryRecord = null;
+//                this.selectedCategoryRecord = null;
+console.log(catalog_items[0]);
             }
         }
     }

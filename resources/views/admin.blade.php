@@ -57,7 +57,7 @@
     </div>
   </nav>
 
-    <main class="container">
+    <main class="container" style="border: 1px dashed red;">
         <div id="app">
             <app></app>
           </div>
@@ -78,6 +78,10 @@ body {
 }
 main {
   flex: 1 0 auto;
+}
+main.container {
+  max-width: 1400px;
+  width: 90%;
 }
 </style>
 
