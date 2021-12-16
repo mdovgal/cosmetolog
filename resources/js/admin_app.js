@@ -8,6 +8,7 @@ Vue.use(VueRouter)
 
 import App from './views/App'
 import ProductCatalog from './views/admin/ProductCatalog'
+import ProductCreate from './views/admin/ProductCreate'
 import CosmetologsList from './views/admin/CosmetologsList'
 import CustomersList from './views/admin/CustomersList'
 import Orders from './views/admin/Orders'
@@ -27,16 +28,18 @@ const router = new VueRouter({
     routes: [
         {path: '/admin', name: 'product.catalog',component: ProductCatalog
         },
+        {path: '/admin/catalog/:catalog_id/product/create', name: 'product.create',component: ProductCreate
+        },
         {path: '/admin/cosmetologs', name: 'cosmetologs.list',component: CosmetologsList
         },
         {path: '/admin/customers', name: 'customers.list',component: CustomersList
         },
         {path: '/admin/orders', name: 'orders',component: Orders
         },
-        {path: '/admin/hello', name: 'hello', component: Hello
-        },
         { path: '/404', name: '404', component: NotFound
         },
+
+// ---------- old --------------------------------
         {path: '/admin/users', name: 'users.index',component: UsersIndex
         },
         {path: '/admin/hello', name: 'hello', component: Hello,

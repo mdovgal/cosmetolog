@@ -20,9 +20,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
-
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<script>
+ var _templatesRoot = '/';
+ window.CKEDITOR_BASEPATH = "/js/ckeditor/";
+</script>
+  <script src="/js/ckeditor/ckeditor.js"></script>
 <style>
 .router-link-exact-active{font-size: 20px;
                     font-weight: bold;
@@ -57,7 +61,7 @@
     </div>
   </nav>
 
-    <main class="container" style="border: 1px dashed red;">
+    <main class="container" style="__border: 1px dashed red;">
         <div id="app">
             <app></app>
           </div>

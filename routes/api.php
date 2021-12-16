@@ -19,20 +19,29 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::namespace('Api')->group(function () {
+// generals
+    Route::get('/product_params', 'ProductController@params');
+
+// Routers for Categories
     Route::get('/catalog', 'CatalogController@index');
     Route::put('/catalog/{catalog}', 'CatalogController@update');
     Route::delete('/catalog/{catalog}', 'CatalogController@delete');
     Route::post('/catalog', 'CatalogController@create');
 
-    Route::get('/products/category/{category}', 'ProductController@create');
+// Routers for Products
+    Route::get('/products/category/{category}', 'ProductController@index');
+    Route::get('/product/{product}', 'ProductController@find');
+    Route::post('/product', 'ProductController@save');
 
-
+// Routers for Users
     Route::post('/users', 'UsersController@store');
     Route::get('/users', 'UsersController@index');
     Route::get('/users/{user}', 'UsersController@show');
     Route::put('/users/{user}', 'UsersController@update');
     Route::delete('/users/{user}', 'UsersController@destroy');
 
+
+// old routers
     Route::get('/category', 'CategoryController@index');
 
     Route::get('/article/user/{user}', 'ArticleController@index');

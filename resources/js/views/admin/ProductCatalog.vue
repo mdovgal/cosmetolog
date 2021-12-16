@@ -14,14 +14,14 @@
             <ul class="collapsible">
                 <li v-for="item in catalog" v-if="item.parent_id == 0" :class="{ 'active': item.id == catalog[0].id }"  :key="item.id">
                     <div class="collapsible-header"><i class="material-icons">whatshot</i>
-                            <span @click="viewProductList(item)">{{ item.title }}</span>
+                            <span  style="width:100%;">{{ item.title }}</span>
                         <i class="material-icons right md-24" @click="editCategory(item)">edit</i>
                         <i class="material-icons right md-24" @click="deleteCategory(item)">delete</i>
                     </div>
                     <div class="collapsible-body" v-if="item.parent_id == 0">
                         <ul class="collection">
                             <li class="collection-item" v-for="sub_item in item.children" :key="sub_item.id">
-                                <span  @click="viewProductList(sub_item)">{{ sub_item.title }}</span>
+                                <span  @click="viewProductList(sub_item)" style="cursor:pointer;">{{ sub_item.title }}::{{sub_item.id}}</span>
                                 <i class="material-icons right md-18" style="cursor:pointer;" @click="deleteCategory(sub_item)">delete</i>
                                 <i class="material-icons right md-18" style="cursor:pointer;" @click="editCategory(sub_item)">edit</i>
                             </li>
@@ -79,7 +79,7 @@
                     <h5 style="margin-top: 0px;">Категорія {{ selectedCategoryRecord.title }}</h5>
                 </div>
                 <div class="col s3">
-                    <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addCategory()">
+                    <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addProduct(selectedCategoryRecord)">
                         <i class="material-icons left">add</i>
                         Додати продукт
                     </a>
@@ -87,8 +87,11 @@
             </div>
             <div class="row">
                 <div class="col s12">
-                    <div v-if="products"> Product list</div>
-                    <div v-else>У категорії продуктів не знайдено</div>
+                    <div v-if="! loaded">Завантаження...</div>
+                    <div v-else>
+                        <div v-if="products"> Product list</div>
+                        <div v-else>У категорії продуктів не знайдено</div>
+                    </div>
                 </div>
             </div>
 
@@ -170,7 +173,10 @@
             var elems_select = document.getElementById('category_select');
             if( elems_select && !this.is_m_select_build){
                 var instances_select = M.FormSelect.init(elems_select);
-                M.toast({html: 'M-SELECT is build now!'})
+                M.toast({
+                    html: 'M-SELECT is build now!'
+                    //,displayLength: 10000
+                })
                 this.is_m_select_build = true;
             }
 
@@ -180,8 +186,8 @@
         beforeRouteEnter (to, from, next){
             getCatalog( (err, data) => {
                 next(vm => vm.setData(err, data));
-        });
-    },
+            });
+        },
     beforeRouteUpdate (to, from, next) {
         //this.catalog = null
         getCatalog((err, data) => {
@@ -190,18 +196,35 @@
         });
     },
     methods: {
-// Products methods ------------------------------------------------------
+// -------------------------------------------------------------------------
+// Products methods --------------------------------------------------------
+// -------------------------------------------------------------------------
+        addProduct(category_item){
+console.log('~~~ Catalog | addProduct ~~~~~~~~~~~', category_item.id);
+            var catalog_id = category_item.id;
+            this.$router.push({
+//                path: `/admin/catalog/${catalog_id}/product/create`,
+                path: `/admin/catalog/${catalog_id}/product/create`,
+                //component: ProductCreate,
+                params: {catalog_id: catalog_id},
+                props: true
+        });
+        },
         viewProductList(category_item){
-console.log('~~~> viewProductList ~~~~~~~~~~~',category_item.id, category_item.children);
+//console.log('~~~> todo: viewProductList ~~~~~~~~~~~',category_item.id, category_item.children);
+            this.loaded = false;
             //selectedCategoryRecord
             this.selectedCategoryRecord = Vue.util.extend({}, category_item);
 
             api.getCategoryProducts(category_item.id )
             .then((response) => {
-console.log('~~~~> getCategoryProducts ~~~~~~~~~~~~~~~~', response.data);
+//console.log('~~~~> todo: API getCategoryProducts ~~~~~~~~~~~~~~~~', response.data);
+                this.loaded = true;
             });
         },
+// -------------------------------------------------------------------------
 // Categiries methods ------------------------------------------------------
+// -------------------------------------------------------------------------
         addCategory(){
             this.popup_catalog = this.catalog;
             var elems_modal = document.getElementById('modal1');
@@ -303,7 +326,6 @@ console.log('~~~~> getCategoryProducts ~~~~~~~~~~~~~~~~', response.data);
 //                this.selectedCategoryRecord = Vue.util.extend({}, catalog_items[0]);
                 this.selectedCategoryRecord = null;
 //                this.selectedCategoryRecord = null;
-console.log(catalog_items[0]);
             }
         }
     }
