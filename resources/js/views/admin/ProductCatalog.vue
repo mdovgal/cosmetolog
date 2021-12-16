@@ -323,9 +323,22 @@ console.log('~~~ Catalog | addProduct ~~~~~~~~~~~', category_item.id);
                 this.error = err.toString();
             } else {
                 this.catalog = catalog_items;
-//                this.selectedCategoryRecord = Vue.util.extend({}, catalog_items[0]);
+
                 this.selectedCategoryRecord = null;
-//                this.selectedCategoryRecord = null;
+
+
+                if(typeof this.$route.params.catalog_id !== "undefined"){
+                    let router_item = null;
+                    let that = this;
+                    $.each(catalog_items, function(v, parent_i){
+                        $.each(parent_i.children, function(vv, ii){
+                            if(ii.id == that.$route.params.catalog_id){
+                                router_item = ii;
+                            }
+                        });
+                    });
+                    this.viewProductList(router_item)
+                }
             }
         }
     }

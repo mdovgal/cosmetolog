@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->integer('type_id');
             $table->integer('brand_id')->nullable();
             $table->string('title');
+            $table->text('short_description')->nullable();
             $table->text('description')->nullable();
             $table->text('composition')->nullable();
             $table->decimal('price', 8, 2);

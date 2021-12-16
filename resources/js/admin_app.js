@@ -28,6 +28,8 @@ const router = new VueRouter({
     routes: [
         {path: '/admin', name: 'product.catalog',component: ProductCatalog
         },
+        {path: '/admin/products/category/:catalog_id', name: 'products.catalog',component: ProductCatalog
+        },
         {path: '/admin/catalog/:catalog_id/product/create', name: 'product.create',component: ProductCreate
         },
         {path: '/admin/cosmetologs', name: 'cosmetologs.list',component: CosmetologsList
