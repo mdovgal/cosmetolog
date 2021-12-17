@@ -13,6 +13,7 @@ class Product extends Model
         'type_id',
         'brand_id',
         'title',
+        'short_description',
         'description',
         'composition',
         'price',

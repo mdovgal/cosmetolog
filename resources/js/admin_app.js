@@ -9,6 +9,7 @@ Vue.use(VueRouter)
 import App from './views/App'
 import ProductCatalog from './views/admin/ProductCatalog'
 import ProductCreate from './views/admin/ProductCreate'
+import ProductEdit from './views/admin/ProductEdit'
 import CosmetologsList from './views/admin/CosmetologsList'
 import CustomersList from './views/admin/CustomersList'
 import Orders from './views/admin/Orders'
@@ -31,6 +32,8 @@ const router = new VueRouter({
         {path: '/admin/products/category/:catalog_id', name: 'products.catalog',component: ProductCatalog
         },
         {path: '/admin/catalog/:catalog_id/product/create', name: 'product.create',component: ProductCreate
+        },
+        {path: '/admin/product/:id/edit', name: 'product.edit', component: ProductEdit
         },
         {path: '/admin/cosmetologs', name: 'cosmetologs.list',component: CosmetologsList
         },

@@ -23,19 +23,89 @@ class ProductController extends Controller
 {
     public function index( $category_id )
     {
+        $productsItems = Product::where('category_id', $category_id)
+            ->orderBy('title', 'asc')
+            ->paginate(12)
+            //->get()
+            ;
+
+        $productsItems = $productsItems
+            ->groupBy('category_id')
+            ->map(function ($subCollection) {
+                return $subCollection->chunk(3); // put your group size
+            });
+        ;
+
+        $all_collections = collect([
+            'data' => $productsItems]);
+        return $all_collections;
+    }
+
+    public function find( $product_id )
+    {
         return ProductResource::collection(
-            Product::where('category_id', $category_id)
-                ->orderBy('title', 'asc')
-                ->paginate(10)
+            Product::where('id', $product_id)->get()
         );
     }
 
-    public function find()
-    {
-        return ProductResource::collection(
-            Product::orderBy('name', 'asc')
-                ->paginate(10)
-        );
+    public function update(Product $product, Request $request){
+        $old_data = Product::where('id', $request->id)->get()->toArray();
+        $old_image = $old_data[0]['image'];
+
+        $current_product = Product::find( $request->id );
+
+        $validate_rules = [
+            'category_id' => 'required|numeric|gt:0',
+            'type_id' => 'required|numeric|gt:0',
+            'brand_id' => 'numeric',
+            'title' => 'required',
+            'short_description' => 'string|min:15',
+            'description' => 'string|min:25',
+            'composition' => 'string|min:5',
+            'price' => 'required|numeric|gt:0',
+            'items_on_stock' => 'required|numeric',
+            'attributes' => 'array'
+        ];
+
+        if( !empty($request->attachment) ){
+            $validate_rules['attachment'] = 'string';
+        }
+
+        $data = $request->validate( $validate_rules );
+
+        $attributes = $data['attributes'];
+        unset($data['attributes']);
+
+        if( !empty($request->attachment) ){
+            $attachment = $data['attachment'];
+            unset($data['attachment']);
+
+            if($upload_result = $this->saveAttachment( $attachment )){
+                $data['image'] = $upload_result;
+                $data['image_preview'] = $upload_result;
+
+                if(!empty($old_image)){
+                    $path = getcwd();
+                    if( file_exists($file_for_delete = $path . $old_image) ){
+                        unlink( $file_for_delete );
+                    }
+                }
+            };
+        }
+
+        $res = $current_product->update( $data );
+        $current_product->attributes()->delete();
+
+        foreach ($attributes as $attr) {
+            if((int)$attr){
+                DB::table('product_attributes')->insert([
+                    'product_id' => $request->id,
+                    'attribute_id' => $attr,
+                ]);
+            }
+        }
+
+        return new ProductResource( $current_product );
     }
 
     public function save(Request $request)
@@ -94,6 +164,26 @@ class ProductController extends Controller
 
     }
 
+    public function delete( $product_id )
+    {
+        $old_data = Product::where('id', $product_id)->get()->toArray();
+        $old_image = $old_data[0]['image'];
+
+        $current_product = Product::find( $product_id );
+
+        $current_product->attributes()->delete();
+        $current_product->delete();
+
+        if(!empty($old_image)){
+            $path = getcwd();
+            if( file_exists($file_for_delete = $path . $old_image) ){
+                unlink( $file_for_delete );
+            }
+        }
+
+        return response(null, 204);
+    }
+
     protected function  saveAttachment($data = null) {
         if(empty($data)) return false;
         $path = getcwd();
@@ -132,7 +222,7 @@ class ProductController extends Controller
         }
     }
 
-    public function params()
+    public function params( $product_id = null)
     {
         $menuItems = Catalog::orderBy('parent_id')->orderBy('title')->get();
         $menuItems = $this->buildCategoryTree($menuItems);
@@ -143,12 +233,18 @@ class ProductController extends Controller
         $attributesItems = Attributes::orderBy('type')->orderBy('title')->get();
         $attributesItems =  $this->buildSubGroups($attributesItems);
 
+        $attributesItemSelected = [];
+        if( !empty($product_id)){
+            $attributesItemSelected = ProductAttributes::where('product_id', $product_id)->get();
+        }
+
         $all_collections = collect([
             'data' => [
                 ['catalog' => $menuItems],
                 ['types' => $typeItems],
                 ['brends' => $brendItems],
-                ['attributes' => $attributesItems]
+                ['attributes' => $attributesItems],
+                ['attributes_selected' => $attributesItemSelected],
             ]]);
         return $all_collections;
 
@@ -171,6 +267,16 @@ class ProductController extends Controller
     {
         $grouped = $items
             ->groupBy('type')
+            ->map(function ($subCollection) {
+                return $subCollection->chunk(4); // put your group size
+            });
+        ;
+        return $grouped;
+    }
+
+    public function buildProductRowGroups($items)
+    {
+        $grouped = $items
             ->map(function ($subCollection) {
                 return $subCollection->chunk(4); // put your group size
             });

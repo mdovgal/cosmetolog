@@ -4,9 +4,12 @@
             <p>{{ error }}</p>
         </div>
         <div v-if="message" class="alert alert-success">{{ message }}</div>
-        <div v-if="! loaded">Завантаження...</div>
+        <div class="progress" v-if="! loaded && !catalog">
+            <div class="indeterminate"></div>
+        </div>
 
-        <div class="col s4" style="margin-top: 20px;">
+
+        <div class="col s3" style="margin-top: 20px;">
             <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addCategory()">
                 <i class="material-icons left">add</i>
                 Додати категорію
@@ -73,10 +76,13 @@
 <!-- END: Modal Structure -->
         </div>
 
-        <div class="col s8" style="margin-top: 20px; padding-left: 25px;"  v-if="selectedCategoryRecord"  ref="selectedCategoryRecordModal">
+        <div class="col s9" style="margin-top: 20px; padding-left: 25px;"  v-if="selectedCategoryRecord"  ref="selectedCategoryRecordModal">
             <div class="row">
                 <div class="col s9">
-                    <h5 style="margin-top: 0px;">Категорія {{ selectedCategoryRecord.title }}</h5>
+                    <h5 style="margin-top: 0px;">Категорія: {{ selectedCategoryRecord.title }}</h5>
+                    <div class="progress" v-if="! loaded && catalog && !products">
+                        <div class="indeterminate"></div>
+                    </div>
                 </div>
                 <div class="col s3">
                     <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addProduct(selectedCategoryRecord)">
@@ -87,11 +93,41 @@
             </div>
             <div class="row">
                 <div class="col s12">
-                    <div v-if="! loaded">Завантаження...</div>
-                    <div v-else>
-                        <div v-if="products"> Product list</div>
-                        <div v-else>У категорії продуктів не знайдено</div>
+                    <div v-if="loaded && products">
+                        <div v-if="products">
+
+                            <div class="row products_row" v-for="row in products">
+                                <div class="col s4" v-for="{id, image, title, short_description, price, items_on_stock} in row">
+                                    <div class="card">
+                                        <div class="card-image">
+                                            <img v-if="image" :src="image">
+                                            <img v-else src="/img/product_placeholder.png">
+
+                                            <router-link :to="{ name: 'product.edit', params: { id } }" class="btn-floating halfway-fab waves-effect waves-light blue edit" >
+                                                <i class="material-icons">edit</i>
+                                            </router-link>
+                                            <a class="btn-floating halfway-fab waves-effect waves-light blue delete" @click="deleteProduct( id, title )"><i class="material-icons">delete</i></a>
+                                        </div>
+                                        <div class="card-content">
+                                            <h6><b>{{title}} :: {{id}}</b></h6>
+                                            <div class="row short_description" v-html="short_description"></div>
+                                            <div class="row price">
+                                                <div class="col s6">Ціна, грн</div>
+                                                <div class="col s6">Кількість</div>
+                                            </div>
+                                            <div class="row price">
+                                                <div class="col s6"><b>{{ price }}</b></div>
+                                                <div class="col s6"><b>{{ items_on_stock }}</b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
+                    <div v-if="loaded && !products">У категорії продукти відсутні</div>
                 </div>
             </div>
 
@@ -154,9 +190,15 @@
                 }
             };
         },
+        mounted(){
+            setTimeout(() => {
+                var current_menu_item = $("menu a").first();
+                if(!current_menu_item.hasClass('router-link-exact-active'))current_menu_item.addClass('router-link-exact-active');
+            }, 50);
+        },
         updated(){
             if(!this.is_m_build){
-                M.toast({html: 'M is build now!'})
+                M.toast({html: 'M::is build now!'})
                 var elem = document.querySelectorAll('.collapsible');
                 var instances = M.Collapsible.init(elem);
 
@@ -174,14 +216,11 @@
             if( elems_select && !this.is_m_select_build){
                 var instances_select = M.FormSelect.init(elems_select);
                 M.toast({
-                    html: 'M-SELECT is build now!'
+                    html: 'M::M-SELECT is build now!'
                     //,displayLength: 10000
                 })
                 this.is_m_select_build = true;
             }
-
-
-            //M.toast({html: 'Updated Content now......'})
         },
         beforeRouteEnter (to, from, next){
             getCatalog( (err, data) => {
@@ -199,27 +238,46 @@
 // -------------------------------------------------------------------------
 // Products methods --------------------------------------------------------
 // -------------------------------------------------------------------------
+        deleteProduct(product_id, product_title){
+
+            var confirm_message = 'Ви дійсно бажаєте видалити продукт '+product_title+'?';
+
+            if(confirm( confirm_message )){
+                this.saving = true;
+                api.deleteProduct( product_id )
+                    .then((response) => {
+                        M.toast({html: 'Продукт видалено!'})
+
+                        this.saving = false;
+                        this.is_m_build = false;
+                        this.$router.go();
+                    });
+            }
+        },
         addProduct(category_item){
-console.log('~~~ Catalog | addProduct ~~~~~~~~~~~', category_item.id);
             var catalog_id = category_item.id;
             this.$router.push({
-//                path: `/admin/catalog/${catalog_id}/product/create`,
                 path: `/admin/catalog/${catalog_id}/product/create`,
-                //component: ProductCreate,
                 params: {catalog_id: catalog_id},
                 props: true
-        });
+            });
         },
         viewProductList(category_item){
-//console.log('~~~> todo: viewProductList ~~~~~~~~~~~',category_item.id, category_item.children);
             this.loaded = false;
-            //selectedCategoryRecord
+            this.products = null;
             this.selectedCategoryRecord = Vue.util.extend({}, category_item);
 
             api.getCategoryProducts(category_item.id )
             .then((response) => {
-//console.log('~~~~> todo: API getCategoryProducts ~~~~~~~~~~~~~~~~', response.data);
                 this.loaded = true;
+                let that = this;
+                if(typeof response.data.data.length !== 'undefined' && response.data.data.length == 0){
+                    this.products = null;
+                }else{
+                    $.each(response.data.data, function(cat_id, rows){
+                        that.products = rows;
+                    });
+                }
             });
         },
 // -------------------------------------------------------------------------
@@ -355,4 +413,40 @@ console.log('~~~ Catalog | addProduct ~~~~~~~~~~~', category_item.id);
 
     .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
     .material-icons.blue { color: #80d8ff; }
+
+    .progress {
+        background-color: #2196f3;
+    }
+    .progress .indeterminate {
+        background-color: #90caf9;
+    }
+    .row.products_row .card{ width: 335px; min-height: 539px;}
+    .row.products_row .card-image{
+        border-bottom: 1px solid lightgrey;
+        height: 291px;
+        width: 291px;
+    }
+    .row.products_row .card-image img{
+        margin: auto;
+        height: 100%;
+        width: 100%;
+        max-width:290px;
+        max-height:290px;
+        object-fit: cover;
+        object-position: center;
+    }
+    .btn-floating.halfway-fab.edit{
+        right: 26px;
+    }
+    .btn-floating.halfway-fab.delete{
+        right: -17px;
+    }
+    .card-content .row.short_description{
+        min-height: 90px;
+        overflow: hidden;
+    }
+    .card-content .row.price{
+        margin-bottom: 0px;
+    }
+
 </style>
