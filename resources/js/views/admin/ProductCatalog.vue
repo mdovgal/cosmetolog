@@ -45,7 +45,7 @@
                                v-model="selectedCategoryRecord.id"
                                class="form-control">
                         <div class="form-group">
-                            <label for="title">Категорія</label>
+                            <label for="title">Батьківська категорія</label>
                             <select name="parent_id" id="category_select">
                                 <option value="0" :selected="selectedCategoryRecord.parent_id == 0">
                                     Top level
@@ -56,7 +56,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="title">Name</label>
+                            <label for="title">Найменування категорії</label>
                             <input type="text"
                                    id="title"
                                    name="title"
@@ -67,7 +67,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <a href="" class="modal-close waves-effect waves-red btn-flat" @click="cancelCategory()">Cancel</a>
+                    <p class="modal-close waves-effect waves-red btn-flat" @click="cancelCategory()">Cancel</p>
                     <a href="" class="waves-effect waves-green btn-flat" :disabled="saving" @click="saveCategory()">
                     {{ saving ? 'Зберігається...' : 'Зберегти' }}
                     </a>
@@ -198,7 +198,7 @@
         },
         updated(){
             if(!this.is_m_build){
-                M.toast({html: 'M::is build now!'})
+                //M.toast({html: 'M::is build now!'})
                 var elem = document.querySelectorAll('.collapsible');
                 var instances = M.Collapsible.init(elem);
 
@@ -215,10 +215,7 @@
             var elems_select = document.getElementById('category_select');
             if( elems_select && !this.is_m_select_build){
                 var instances_select = M.FormSelect.init(elems_select);
-                M.toast({
-                    html: 'M::M-SELECT is build now!'
-                    //,displayLength: 10000
-                })
+                //M.toast({html: 'M::M-SELECT is build now!'})
                 this.is_m_select_build = true;
             }
         },
@@ -319,7 +316,6 @@
                     parent_id: parent_id
                 }).then((response) => {
                     M.toast({html: 'Категорія відредагована!'})
-
                     instance_modal.close();
 
                     this.is_m_build = false;
@@ -335,7 +331,6 @@
                     parent_id: parent_id
                 }).then((response) => {
                     M.toast({html: 'Категорія додана!'})
-
                     instance_modal.close();
 
                     this.is_m_build = false;
@@ -373,7 +368,7 @@
             this.saving = false;
             this.error_message = null;
             this.is_m_select_build = false;
-            this.selectedCategoryRecord = null;
+            //this.selectedCategoryRecord = null;
             this.popup_catalog = null;
         },
         setData(err, { data: catalog_items }) {
@@ -447,6 +442,11 @@
     }
     .card-content .row.price{
         margin-bottom: 0px;
+    }
+
+    #title{
+        border-bottom: 1px solid lightgrey !important;
+        box-shadow: 0 1px 0 0 lightgrey !important;
     }
 
 </style>
