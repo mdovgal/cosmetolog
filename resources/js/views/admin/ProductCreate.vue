@@ -178,7 +178,7 @@
     import JQuery from 'jquery';
     let $ = JQuery;
 
-    import api from '../../api/catalog';
+    import api from '../../api/admin_catalog';
 
     const getProductParams = (callback) => {
         axios

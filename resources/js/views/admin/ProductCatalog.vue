@@ -153,7 +153,7 @@
     import JQuery from 'jquery';
     let $ = JQuery;
 
-    import api from '../../api/catalog';
+    import api from '../../api/admin_catalog';
 //    import api from '../../api/products';
 //    $( document ).ready(function() {});
 
