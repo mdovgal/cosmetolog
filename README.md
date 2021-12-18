@@ -33,8 +33,8 @@ php artisan migrate
 php artisan db:seed
 ```
 ## Посилання на розгорнуту систему
-Система на Heroku доступна за [посиланням](http://dblab3app.herokuapp.com/login)
+Система на Heroku доступна за [посиланням](http://kursovik-cosmetics.herokuapp.com/)
 
 ## Логічна модель даних
-![Логічна](https://github.com/DovIra/DB_lab3/blob/main/Logical_model_.png)
+![Логічна](http://kursovik-cosmetics.herokuapp.com/img/Logic_model.jpg)
 
