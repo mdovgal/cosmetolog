@@ -10,10 +10,13 @@
 
 
         <div class="col s3" style="margin-top: 20px;">
-            <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addCategory()">
+            <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving_category" @click="addCategory()">
                 <i class="material-icons left">add</i>
                 Додати категорію
             </a>
+            <div class="progress" v-if="delete_category">
+                <div class="indeterminate"></div>
+            </div>
             <ul class="collapsible">
                 <li v-for="item in catalog" v-if="item.parent_id == 0" :class="{ 'active': item.id == catalog[0].id }"  :key="item.id">
                     <div class="collapsible-header"><i class="material-icons">whatshot</i>
@@ -37,6 +40,9 @@
             <div id="modal1" class="modal" ref="selectedCategoryRecordModal">
                 <div class="modal-content">
                     <h6>Редагувати категорію</h6>
+                    <div class="progress" v-if="saving_category">
+                        <div class="indeterminate"></div>
+                    </div>
                     <span v-if="error_message" class="helper-text" data-error="" data-success="">{{ error_message }}</span>
                     <form id="modal1_form" v-if="selectedCategoryRecord">
                         <input type="hidden"
@@ -72,7 +78,7 @@
                         Скасувати
                     </p>
                     <p href="" class="waves-effect blue waves-blue btn-flat" :disabled="saving" @click="saveCategory()">
-                    {{ saving ? 'Зберігається...' : 'Зберегти' }}
+                    {{ saving_category ? 'Зберігається...' : 'Зберегти' }}
                     </p>
                 </div>
             </div>
@@ -175,6 +181,8 @@
         data() {
             return {
                 message: null,
+                saving_category: false,
+                delete_category: false,
                 saving: false,
                 loaded: true,
                 catalog: null,
@@ -219,9 +227,8 @@
             }
 
             var elems_select = document.getElementById('category_select');
-            if( elems_select && !this.is_m_select_build){
+            if( elems_select ){
                 var instances_select = M.FormSelect.init(elems_select);
-                //M.toast({html: 'M::M-SELECT is build now!'})
                 this.is_m_select_build = true;
             }
         },
@@ -291,6 +298,9 @@
             var elems_modal = document.getElementById('modal1');
             var instance_modal = M.Modal.getInstance(elems_modal);
 
+            var elems_select = document.getElementById('category_select');
+            var instances_select = M.FormSelect.init(elems_select);
+
             this.selectedCategoryRecord = Vue.util.extend({}, this.category);
             instance_modal.open();
         },
@@ -300,6 +310,9 @@
             var instance_modal = M.Modal.getInstance(elems_modal);
 
             this.selectedCategoryRecord = Vue.util.extend({}, item);
+
+            var elems_select = document.getElementById('category_select');
+            var instances_select = M.FormSelect.init(elems_select);
 
             instance_modal.open();
         },
@@ -314,11 +327,11 @@
             }
 
             if(form.title.value == ''){
-                this.saving = false;
+                this.saving_category = false;
                 this.error_message = 'Помилка даних. Виправьте помилки і знову надішліть форму.';
                 this.category_errors.title = 'Вкажіть назву категорії';
             }else{
-                this.saving = true;
+                this.saving_category = true;
                 this.error_message = null;
                 this.category_errors.title = '';
 
@@ -333,10 +346,19 @@
                         this.is_m_build = false;
                         this.popup_catalog = null;
                         this.is_m_select_build = false;
-                        this.$router.push({ name: 'product.catalog', params: {} });
+
+                        var that = this;
+
+                        axios
+                            .get('/api/catalog', {})
+                            .then(response => {
+                                that.catalog = response.data.data;
+                            }).catch(error => {
+                                callback(error, error.response.data);
+                            });
                     }).catch(error => {
                         this.error_message = error.response.data.message || error.message;
-                    }).then(() => this.saving = false);
+                    }).then(() => this.saving_category = false);
                 }else{
                     api.createCatalog({
                         title: form.title.value,
@@ -348,10 +370,19 @@
                         this.is_m_build = false;
                         this.popup_catalog = null;
                         this.is_m_select_build = false;
-                        this.$router.push({ name: 'product.catalog', params: {} });
+
+                        var that = this;
+
+                        axios
+                            .get('/api/catalog', {})
+                            .then(response => {
+                                that.catalog = response.data.data;
+                            }).catch(error => {
+                                callback(error, error.response.data);
+                            });
                     }).catch(error => {
                         this.error_message = error.response.data.message || error.message;
-                    }).then(() => this.saving = false);
+                    }).then(() => this.saving_category = false);
                 }
             }
         },
@@ -363,22 +394,31 @@
             }
 
             if(confirm( confirm_message )){
-                this.saving = true;
+                this.saving_category = true;
+                this.delete_category = true;
+
                 api.deleteCategory(item.id )
                 .then((response) => {
                     M.toast({html: 'Категорія видалена!'})
+                    this.saving_category = false;
+                    this.delete_category = false;
 
                     this.is_m_build = false;
-                    this.$router.go();
-                    //this.$router.push({ name: 'product.catalog', params: {} });
-                    //this.$router.push("/admin").catch(()=>{});
 
-                    //app.$forceUpdate();
+                    var that = this;
+
+                    axios
+                        .get('/api/catalog', {})
+                        .then(response => {
+                            that.catalog = response.data.data;
+                        }).catch(error => {
+                            callback(error, error.response.data);
+                        });
                 });
             }
         },
         cancelCategory(){
-            this.saving = false;
+            this.saving_category = false;
             this.error_message = null;
             this.category_errors.title = '';
             this.is_m_select_build = false;
@@ -394,9 +434,9 @@
                 this.error = err.toString();
             } else {
                 this.catalog = catalog_items;
-
                 this.selectedCategoryRecord = null;
-
+console.log('~~~> this.is_m_build', this.is_m_build);
+console.log('~~~> this.is_m_select_build', this.is_m_select_build);
 
                 if(typeof this.$route.params.catalog_id !== "undefined"){
                     let router_item = null;

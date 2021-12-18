@@ -3027,6 +3027,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3056,6 +3062,8 @@ var getProducts = function getProducts(callback) {
   data: function data() {
     return {
       message: null,
+      saving_category: false,
+      delete_category: false,
       saving: false,
       loaded: true,
       catalog: null,
@@ -3100,9 +3108,8 @@ var getProducts = function getProducts(callback) {
 
     var elems_select = document.getElementById('category_select');
 
-    if (elems_select && !this.is_m_select_build) {
-      var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select); //M.toast({html: 'M::M-SELECT is build now!'})
-
+    if (elems_select) {
+      var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select);
       this.is_m_select_build = true;
     }
   },
@@ -3181,6 +3188,8 @@ var getProducts = function getProducts(callback) {
       this.popup_catalog = this.catalog;
       var elems_modal = document.getElementById('modal1');
       var instance_modal = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Modal.getInstance(elems_modal);
+      var elems_select = document.getElementById('category_select');
+      var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select);
       this.selectedCategoryRecord = vue__WEBPACK_IMPORTED_MODULE_0___default.a.util.extend({}, this.category);
       instance_modal.open();
     },
@@ -3189,6 +3198,8 @@ var getProducts = function getProducts(callback) {
       var elems_modal = document.getElementById('modal1');
       var instance_modal = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Modal.getInstance(elems_modal);
       this.selectedCategoryRecord = vue__WEBPACK_IMPORTED_MODULE_0___default.a.util.extend({}, item);
+      var elems_select = document.getElementById('category_select');
+      var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select);
       instance_modal.open();
     },
     saveCategory: function saveCategory() {
@@ -3204,11 +3215,11 @@ var getProducts = function getProducts(callback) {
       }
 
       if (form.title.value == '') {
-        this.saving = false;
+        this.saving_category = false;
         this.error_message = 'Помилка даних. Виправьте помилки і знову надішліть форму.';
         this.category_errors.title = 'Вкажіть назву категорії';
       } else {
-        this.saving = true;
+        this.saving_category = true;
         this.error_message = null;
         this.category_errors.title = '';
 
@@ -3224,15 +3235,16 @@ var getProducts = function getProducts(callback) {
             _this4.is_m_build = false;
             _this4.popup_catalog = null;
             _this4.is_m_select_build = false;
-
-            _this4.$router.push({
-              name: 'product.catalog',
-              params: {}
+            var that = _this4;
+            axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/api/catalog', {}).then(function (response) {
+              that.catalog = response.data.data;
+            })["catch"](function (error) {
+              callback(error, error.response.data);
             });
           })["catch"](function (error) {
             _this4.error_message = error.response.data.message || error.message;
           }).then(function () {
-            return _this4.saving = false;
+            return _this4.saving_category = false;
           });
         } else {
           _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].createCatalog({
@@ -3246,15 +3258,16 @@ var getProducts = function getProducts(callback) {
             _this4.is_m_build = false;
             _this4.popup_catalog = null;
             _this4.is_m_select_build = false;
-
-            _this4.$router.push({
-              name: 'product.catalog',
-              params: {}
+            var that = _this4;
+            axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/api/catalog', {}).then(function (response) {
+              that.catalog = response.data.data;
+            })["catch"](function (error) {
+              callback(error, error.response.data);
             });
           })["catch"](function (error) {
             _this4.error_message = error.response.data.message || error.message;
           }).then(function () {
-            return _this4.saving = false;
+            return _this4.saving_category = false;
           });
         }
       }
@@ -3269,22 +3282,26 @@ var getProducts = function getProducts(callback) {
       }
 
       if (confirm(confirm_message)) {
-        this.saving = true;
+        this.saving_category = true;
+        this.delete_category = true;
         _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].deleteCategory(item.id).then(function (response) {
           materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
             html: 'Категорія видалена!'
           });
+          _this5.saving_category = false;
+          _this5.delete_category = false;
           _this5.is_m_build = false;
-
-          _this5.$router.go(); //this.$router.push({ name: 'product.catalog', params: {} });
-          //this.$router.push("/admin").catch(()=>{});
-          //app.$forceUpdate();
-
+          var that = _this5;
+          axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/api/catalog', {}).then(function (response) {
+            that.catalog = response.data.data;
+          })["catch"](function (error) {
+            callback(error, error.response.data);
+          });
         });
       }
     },
     cancelCategory: function cancelCategory() {
-      this.saving = false;
+      this.saving_category = false;
       this.error_message = null;
       this.category_errors.title = '';
       this.is_m_select_build = false; //this.selectedCategoryRecord = null;
@@ -3302,6 +3319,8 @@ var getProducts = function getProducts(callback) {
       } else {
         this.catalog = catalog_items;
         this.selectedCategoryRecord = null;
+        console.log('~~~> this.is_m_build', this.is_m_build);
+        console.log('~~~> this.is_m_select_build', this.is_m_select_build);
 
         if (typeof this.$route.params.catalog_id !== "undefined") {
           var router_item = null;
@@ -30366,7 +30385,7 @@ var render = function() {
             staticClass:
               "waves-effect waves-light btn light-blue add_catalog_head",
             staticStyle: { width: "100%" },
-            attrs: { disabled: _vm.saving },
+            attrs: { disabled: _vm.saving_category },
             on: {
               click: function($event) {
                 return _vm.addCategory()
@@ -30378,6 +30397,12 @@ var render = function() {
             _vm._v("\n                Додати категорію\n            ")
           ]
         ),
+        _vm._v(" "),
+        _vm.delete_category
+          ? _c("div", { staticClass: "progress" }, [
+              _c("div", { staticClass: "indeterminate" })
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _c(
           "ul",
@@ -30504,6 +30529,12 @@ var render = function() {
           [
             _c("div", { staticClass: "modal-content" }, [
               _c("h6", [_vm._v("Редагувати категорію")]),
+              _vm._v(" "),
+              _vm.saving_category
+                ? _c("div", { staticClass: "progress" }, [
+                    _c("div", { staticClass: "indeterminate" })
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _vm.error_message
                 ? _c(
@@ -30678,7 +30709,9 @@ var render = function() {
                 [
                   _vm._v(
                     "\n                    " +
-                      _vm._s(_vm.saving ? "Зберігається..." : "Зберегти") +
+                      _vm._s(
+                        _vm.saving_category ? "Зберігається..." : "Зберегти"
+                      ) +
                       "\n                    "
                   )
                 ]
@@ -32180,8 +32213,6 @@ var render = function() {
                                 _vm._v(
                                   "\n                                " +
                                     _vm._s(item.brand_title) +
-                                    " :: " +
-                                    _vm._s(item.id) +
                                     " (" +
                                     _vm._s(item.country_title) +
                                     ")\n                            "

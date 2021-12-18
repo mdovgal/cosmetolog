@@ -67,7 +67,7 @@
                             <select id="brand_id" name="brand_id" class="validate" v-model="product.brand_id">
                                 <option value=""></option>
                                 <option v-for="item in product_brands" :value="item.id">
-                                    {{item.brand_title}} :: {{item.id}} ({{item.country_title}})
+                                    {{item.brand_title}} ({{item.country_title}})
                                 </option>
                             </select>
                             <label for="brand_id">Бренд</label>
