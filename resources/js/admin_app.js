@@ -15,12 +15,11 @@ import CustomersList from './views/admin/CustomersList'
 import Orders from './views/admin/Orders'
 import Hello from './views/Hello'
 
-import Home from './views/Home'
-import Articles from './views/Articles'
-import UsersIndex from './views/UsersIndex'
-import UsersEdit from './views/UsersEdit'
-import UsersCreate from './views/UsersCreate'
-import ArticleCreate from './views/ArticleCreate2'
+import Articles from './views/admin/Articles'
+import UsersIndex from './views/admin/UsersIndex'
+import UsersEdit from './views/admin/UsersEdit'
+import UsersCreate from './views/admin/UsersCreate'
+import ArticleCreate from './views/admin/ArticleCreate'
 
 import NotFound from './views/NotFound'
 

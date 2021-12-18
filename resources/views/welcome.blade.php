@@ -6,118 +6,91 @@
 
         <title>Косметика</title>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
+         <link rel="dns-prefetch" href="//fonts.gstatic.com">
+            <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
+            <!-- Styles -->
+            <link href="{{ asset('css/admin_app.css') }}" rel="stylesheet">
+            <!-- materialize -->
+            <!-- Compiled and minified CSS -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+            <!-- Compiled and minified JavaScript -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
         <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
+<style>
+.router-link-exact-active{font-size: 20px;
+                    font-weight: bold;
+                    text-decoration: underline;}
+</style>
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <!-- <a href="{{ url('/home') }}">Home</a>  -->
+    <nav class="light-blue accent-1" role="navigation">
+        <div class="nav-wrapper container">
+            <a id="logo-container" href="{{ url('/') }}" class="brand-logo">
+                <img src="/img/logo_blue.png" style="width:55px;padding-top:5px;"/>
+            </a>
+        @guest
+            <ul class="right hide-on-med-and-down">
+                <li><a href="{{ route('login') }}">Вхід - welcome</a></li>
+                @if (Route::has('register'))
+                    <li>
+                        <a href="{{ route('register') }}">Зареєструватись - welcome</a>
+                    </li>
+                @endif
+            </ul>
+        @else
+          <ul class="right hide-on-med-and-down text-blue text-darken-4">
+            <li><a class="text-blue text-darken-4" href="{{ url('/admin') }}">Вітаємо, {{ Auth::user()->name }}! [{{ Auth::user()->role }}]</a></li>
 
-                        <li class="nav-item">
-                         @if (Auth::user()->role == 'admin')
-                            <a id="navbarDropdown" class="nav-link" href="{{ url('/admin') }}" role="button" v-pre>
-                                Вітаємо, {{ Auth::user()->name }}! Your role: {{ Auth::user()->role }}
-                            </a>
-                         @else
-                         <a id="navbarDropdown" class="nav-link" href="#" role="button" v-pre>
-                             Вітаємо, {{ Auth::user()->name }}! Your role: {{ Auth::user()->role }}
-                         </a>
-                        @endif
+            <li><a class="text-blue text-darken-4" href="{{ url('/') }}">Cart</a></li>
 
-                        </li><li>
-                            <a class="nav-link"  role="button" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                {{ __('000-Вихід') }}
-                            </a>
+            <li><a class="text-blue text-darken-4" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                Вихід
+            </a></li>
+          </ul>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </li>
-                    @else
-                        <a href="{{ route('login') }}">Вхід - WELCOME</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Зареєструватись</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Косметика [resorses/views/welcome.blade]
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+              @csrf
+          </form>
+          @endguest
         </div>
+      </nav>
+
+      <main class="container" style="__border: 1px dashed red;">
+          <div id="app">
+              <app></app>
+            </div>
+      </main>
+        <footer class="page-footer light-blue accent-1">
+            <div class="footer-copyright">
+              <div class="container">
+              Made by <a class="text-blue text-darken-4" href="http://materializecss.com">Materialize</a>
+              </div>
+            </div>
+          </footer>
+
+<style>
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+main {
+  flex: 1 0 auto;
+}
+main.container {
+  max-width: 1400px;
+  width: 90%;
+}
+.progress {
+        background-color: #2196f3 !important;
+    }
+    .progress .indeterminate {
+        background-color: #90caf9 !important;
+    }
+</style>
+<script src="{{ mix('js/app.js') }}"></script>
     </body>
 </html>

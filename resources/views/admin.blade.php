@@ -28,7 +28,7 @@
 </script>
   <script src="/js/ckeditor/ckeditor.js"></script>
 <style>
-.router-link-exact-active{font-size: 20px;
+menu a.active{font-size: 20px;
                     font-weight: bold;
                     text-decoration: underline;}
 </style>
@@ -93,6 +93,12 @@ main.container {
   max-width: 1400px;
   width: 90%;
 }
+.progress {
+        background-color: #2196f3 !important;
+    }
+    .progress .indeterminate {
+        background-color: #90caf9 !important;
+    }
 </style>
 
   <script src="{{ mix('js/admin_app.js') }}"></script>
