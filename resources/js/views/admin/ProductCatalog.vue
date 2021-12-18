@@ -206,9 +206,13 @@
         },
         mounted(){
             setTimeout(() => {
-                $("#general_loader").hide();
+                $("menu a").each(function(){
+                    if($(this).hasClass('active')) $(this).removeClass('active');
+                });
                 var current_menu_item = $("menu a").first();
-                if(!current_menu_item.hasClass('router-link-exact-active'))current_menu_item.addClass('router-link-exact-active');
+                if(!current_menu_item.hasClass('active'))current_menu_item.addClass('active');
+
+                $("#general_loader").hide();
             }, 50);
         },
         updated(){

@@ -3090,9 +3090,12 @@ var getProducts = function getProducts(callback) {
   },
   mounted: function mounted() {
     setTimeout(function () {
-      $("#general_loader").hide();
+      $("menu a").each(function () {
+        if ($(this).hasClass('active')) $(this).removeClass('active');
+      });
       var current_menu_item = $("menu a").first();
-      if (!current_menu_item.hasClass('router-link-exact-active')) current_menu_item.addClass('router-link-exact-active');
+      if (!current_menu_item.hasClass('active')) current_menu_item.addClass('active');
+      $("#general_loader").hide();
     }, 50);
   },
   updated: function updated() {
@@ -3653,9 +3656,13 @@ var getProductParams = function getProductParams(callback) {
     var elems_select = document.querySelectorAll('select');
     var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select, {});
     setTimeout(function () {
+      $("menu a").each(function () {
+        if ($(this).hasClass('active')) $(this).removeClass('active');
+      });
       var current_menu_item = $("menu a").first();
-      if (!current_menu_item.hasClass('router-link-exact-active')) current_menu_item.addClass('router-link-exact-active');
-    }, 150);
+      if (!current_menu_item.hasClass('active')) current_menu_item.addClass('active');
+      $("#general_loader").hide();
+    }, 50);
   },
   updated: function updated() {
     var elems_select = document.querySelectorAll('select');
@@ -4112,9 +4119,13 @@ var getProductParams = function getProductParams(callback) {
   mounted: function mounted() {
     //M.toast({html: 'M::MOUNTED!'});
     setTimeout(function () {
+      $("menu a").each(function () {
+        if ($(this).hasClass('active')) $(this).removeClass('active');
+      });
       var current_menu_item = $("menu a").first();
-      if (!current_menu_item.hasClass('router-link-exact-active')) current_menu_item.addClass('router-link-exact-active');
-    }, 150);
+      if (!current_menu_item.hasClass('active')) current_menu_item.addClass('active');
+      $("#general_loader").hide();
+    }, 50);
   },
   updated: function updated() {
     if (!this.is_updated) {
