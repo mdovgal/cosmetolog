@@ -3024,6 +3024,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -3068,6 +3071,9 @@ var getProducts = function getProducts(callback) {
         id: null,
         title: "",
         id_parent: 0
+      },
+      category_errors: {
+        title: ''
       }
     };
   },
@@ -3197,53 +3203,60 @@ var getProducts = function getProducts(callback) {
         parent_id = form.parent_id.value;
       }
 
-      this.saving = true;
-      this.error_message = null;
-
-      if (form.id.value != '') {
-        _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].updateCatalog(form.id.value, {
-          title: form.title.value,
-          parent_id: parent_id
-        }).then(function (response) {
-          materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-            html: 'Категорія відредагована!'
-          });
-          instance_modal.close();
-          _this4.is_m_build = false;
-          _this4.popup_catalog = null;
-          _this4.is_m_select_build = false;
-
-          _this4.$router.push({
-            name: 'product.catalog',
-            params: {}
-          });
-        })["catch"](function (error) {
-          _this4.error_message = error.response.data.message || error.message;
-        }).then(function () {
-          return _this4.saving = false;
-        });
+      if (form.title.value == '') {
+        this.saving = false;
+        this.error_message = 'Помилка даних. Виправьте помилки і знову надішліть форму.';
+        this.category_errors.title = 'Вкажіть назву категорії';
       } else {
-        _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].createCatalog({
-          title: form.title.value,
-          parent_id: parent_id
-        }).then(function (response) {
-          materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-            html: 'Категорія додана!'
-          });
-          instance_modal.close();
-          _this4.is_m_build = false;
-          _this4.popup_catalog = null;
-          _this4.is_m_select_build = false;
+        this.saving = true;
+        this.error_message = null;
+        this.category_errors.title = '';
 
-          _this4.$router.push({
-            name: 'product.catalog',
-            params: {}
+        if (form.id.value != '') {
+          _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].updateCatalog(form.id.value, {
+            title: form.title.value,
+            parent_id: parent_id
+          }).then(function (response) {
+            materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
+              html: 'Категорія відредагована!'
+            });
+            instance_modal.close();
+            _this4.is_m_build = false;
+            _this4.popup_catalog = null;
+            _this4.is_m_select_build = false;
+
+            _this4.$router.push({
+              name: 'product.catalog',
+              params: {}
+            });
+          })["catch"](function (error) {
+            _this4.error_message = error.response.data.message || error.message;
+          }).then(function () {
+            return _this4.saving = false;
           });
-        })["catch"](function (error) {
-          _this4.error_message = error.response.data.message || error.message;
-        }).then(function () {
-          return _this4.saving = false;
-        });
+        } else {
+          _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].createCatalog({
+            title: form.title.value,
+            parent_id: parent_id
+          }).then(function (response) {
+            materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
+              html: 'Категорія додана!'
+            });
+            instance_modal.close();
+            _this4.is_m_build = false;
+            _this4.popup_catalog = null;
+            _this4.is_m_select_build = false;
+
+            _this4.$router.push({
+              name: 'product.catalog',
+              params: {}
+            });
+          })["catch"](function (error) {
+            _this4.error_message = error.response.data.message || error.message;
+          }).then(function () {
+            return _this4.saving = false;
+          });
+        }
       }
     },
     deleteCategory: function deleteCategory(item) {
@@ -3273,9 +3286,13 @@ var getProducts = function getProducts(callback) {
     cancelCategory: function cancelCategory() {
       this.saving = false;
       this.error_message = null;
+      this.category_errors.title = '';
       this.is_m_select_build = false; //this.selectedCategoryRecord = null;
 
       this.popup_catalog = null;
+      var elems_modal = document.getElementById('modal1');
+      var instance_modal = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Modal.getInstance(elems_modal);
+      instance_modal.close();
     },
     setData: function setData(err, _ref) {
       var catalog_items = _ref.data;
@@ -4430,7 +4447,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.add_author{text-align: end;margin: 17px 0px;}\n/*div.row div{border: 1px dashed red;}*/\n.material-icons.md-18 { font-size: 18px;\n}\n.material-icons.md-24 { font-size: 24px;\n}\n.material-icons.md-36 { font-size: 36px;\n}\n.material-icons.md-48 { font-size: 48px;\n}\n.material-icons.md-dark { color: rgba(0, 0, 0, 0.54);\n}\n.material-icons.blue { color: #80d8ff;\n}\n.progress {\n    background-color: #2196f3;\n}\n.progress .indeterminate {\n    background-color: #90caf9;\n}\n.row.products_row .card{ width: 335px; min-height: 539px;}\n.row.products_row .card-image{\n    border-bottom: 1px solid lightgrey;\n    height: 291px;\n    width: 291px;\n}\n.row.products_row .card-image img{\n    margin: auto;\n    height: 100%;\n    width: 100%;\n    max-width:290px;\n    max-height:290px;\n    -o-object-fit: cover;\n       object-fit: cover;\n    -o-object-position: center;\n       object-position: center;\n}\n.btn-floating.halfway-fab.edit{\n    right: 26px;\n}\n.btn-floating.halfway-fab.delete{\n    right: -17px;\n}\n.card-content .row.short_description{\n    min-height: 90px;\n    overflow: hidden;\n}\n.card-content .row.price{\n    margin-bottom: 0px;\n}\n#title{\n    border-bottom: 1px solid lightgrey !important;\n    box-shadow: 0 1px 0 0 lightgrey !important;\n}\n\n", ""]);
+exports.push([module.i, "\n.add_author{text-align: end;margin: 17px 0px;}\n/*div.row div{border: 1px dashed red;}*/\n.material-icons.md-18 { font-size: 18px;\n}\n.material-icons.md-24 { font-size: 24px;\n}\n.material-icons.md-36 { font-size: 36px;\n}\n.material-icons.md-48 { font-size: 48px;\n}\n.material-icons.md-dark { color: rgba(0, 0, 0, 0.54);\n}\n.material-icons.blue { color: #80d8ff;\n}\n.progress {\n    background-color: #2196f3;\n}\n.progress .indeterminate {\n    background-color: #90caf9;\n}\n.row.products_row .card{ width: 335px; min-height: 539px;}\n.row.products_row .card-image{\n    border-bottom: 1px solid lightgrey;\n    height: 291px;\n    width: 291px;\n}\n.row.products_row .card-image img{\n    margin: auto;\n    height: 100%;\n    width: 100%;\n    max-width:290px;\n    max-height:290px;\n    -o-object-fit: cover;\n       object-fit: cover;\n    -o-object-position: center;\n       object-position: center;\n}\n.btn-floating.halfway-fab.edit{\n    right: 26px;\n}\n.btn-floating.halfway-fab.delete{\n    right: -17px;\n}\n.card-content .row.short_description{\n    min-height: 90px;\n    overflow: hidden;\n}\n.card-content .row.price{\n    margin-bottom: 0px;\n}\n#title{\n    border-bottom: 1px solid lightgrey !important;\n    box-shadow: 0 1px 0 0 lightgrey !important;\n}\n.helper-text{\n    position: relative !important;\n    min-height: 18px !important;\n    display: block !important;\n    font-size: 12px !important;\n    color: red !important;\n}\n\n\n", ""]);
 
 // exports
 
@@ -30433,13 +30450,7 @@ var render = function() {
                                         }
                                       }
                                     },
-                                    [
-                                      _vm._v(
-                                        _vm._s(sub_item.title) +
-                                          "::" +
-                                          _vm._s(sub_item.id)
-                                      )
-                                    ]
+                                    [_vm._v(_vm._s(sub_item.title))]
                                   ),
                                   _vm._v(" "),
                                   _c(
@@ -30496,10 +30507,10 @@ var render = function() {
               _vm._v(" "),
               _vm.error_message
                 ? _c(
-                    "div",
+                    "span",
                     {
-                      staticClass: "alert alert-danger",
-                      staticStyle: { color: "red" }
+                      staticClass: "helper-text",
+                      attrs: { "data-error": "", "data-success": "" }
                     },
                     [_vm._v(_vm._s(_vm.error_message))]
                   )
@@ -30619,7 +30630,16 @@ var render = function() {
                             )
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.category_errors.title))]
+                      )
                     ])
                   ])
                 : _vm._e()
@@ -30629,20 +30649,25 @@ var render = function() {
               _c(
                 "p",
                 {
-                  staticClass: "modal-close waves-effect waves-red btn-flat",
+                  staticClass:
+                    "waves-effect waves-light btn blue-grey lighten-4",
                   on: {
                     click: function($event) {
                       return _vm.cancelCategory()
                     }
                   }
                 },
-                [_vm._v("Cancel")]
+                [
+                  _vm._v(
+                    "\n                        Скасувати\n                    "
+                  )
+                ]
               ),
               _vm._v(" "),
               _c(
-                "a",
+                "p",
                 {
-                  staticClass: "waves-effect waves-green btn-flat",
+                  staticClass: "waves-effect blue waves-blue btn-flat",
                   attrs: { href: "", disabled: _vm.saving },
                   on: {
                     click: function($event) {
@@ -30805,13 +30830,7 @@ var render = function() {
                                         { staticClass: "card-content" },
                                         [
                                           _c("h6", [
-                                            _c("b", [
-                                              _vm._v(
-                                                _vm._s(title) +
-                                                  " :: " +
-                                                  _vm._s(id)
-                                              )
-                                            ])
+                                            _c("b", [_vm._v(_vm._s(title))])
                                           ]),
                                           _vm._v(" "),
                                           _c("div", {

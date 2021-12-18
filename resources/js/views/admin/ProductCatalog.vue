@@ -24,7 +24,7 @@
                     <div class="collapsible-body" v-if="item.parent_id == 0">
                         <ul class="collection">
                             <li class="collection-item" v-for="sub_item in item.children" :key="sub_item.id">
-                                <span  @click="viewProductList(sub_item)" style="cursor:pointer;">{{ sub_item.title }}::{{sub_item.id}}</span>
+                                <span  @click="viewProductList(sub_item)" style="cursor:pointer;">{{ sub_item.title }}</span>
                                 <i class="material-icons right md-18" style="cursor:pointer;" @click="deleteCategory(sub_item)">delete</i>
                                 <i class="material-icons right md-18" style="cursor:pointer;" @click="editCategory(sub_item)">edit</i>
                             </li>
@@ -37,7 +37,7 @@
             <div id="modal1" class="modal" ref="selectedCategoryRecordModal">
                 <div class="modal-content">
                     <h6>Редагувати категорію</h6>
-                    <div v-if="error_message" class="alert alert-danger" style="color:red;">{{ error_message }}</div>
+                    <span v-if="error_message" class="helper-text" data-error="" data-success="">{{ error_message }}</span>
                     <form id="modal1_form" v-if="selectedCategoryRecord">
                         <input type="hidden"
                                id="id"
@@ -63,14 +63,17 @@
                                    v-model="selectedCategoryRecord.title"
                                    class="form-control"
                                    required="">
+                            <span class="helper-text" data-error="" data-success="">{{ category_errors.title }}</span>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <p class="modal-close waves-effect waves-red btn-flat" @click="cancelCategory()">Cancel</p>
-                    <a href="" class="waves-effect waves-green btn-flat" :disabled="saving" @click="saveCategory()">
+                    <p class="waves-effect waves-light btn blue-grey lighten-4" @click="cancelCategory()">
+                        Скасувати
+                    </p>
+                    <p href="" class="waves-effect blue waves-blue btn-flat" :disabled="saving" @click="saveCategory()">
                     {{ saving ? 'Зберігається...' : 'Зберегти' }}
-                    </a>
+                    </p>
                 </div>
             </div>
 <!-- END: Modal Structure -->
@@ -109,7 +112,7 @@
                                             <a class="btn-floating halfway-fab waves-effect waves-light blue delete" @click="deleteProduct( id, title )"><i class="material-icons">delete</i></a>
                                         </div>
                                         <div class="card-content">
-                                            <h6><b>{{title}} :: {{id}}</b></h6>
+                                            <h6><b>{{title}}</b></h6>
                                             <div class="row short_description" v-html="short_description"></div>
                                             <div class="row price">
                                                 <div class="col s6">Ціна, грн</div>
@@ -187,6 +190,9 @@
                     id: null,
                     title: "",
                     id_parent: 0
+                },
+                category_errors:{
+                    title: ''
                 }
             };
         },
@@ -307,39 +313,46 @@
                 parent_id = form.parent_id.value;
             }
 
-            this.saving = true;
-            this.error_message = null;
-
-            if(form.id.value != ''){
-                api.updateCatalog(form.id.value, {
-                    title: form.title.value,
-                    parent_id: parent_id
-                }).then((response) => {
-                    M.toast({html: 'Категорія відредагована!'})
-                    instance_modal.close();
-
-                    this.is_m_build = false;
-                    this.popup_catalog = null;
-                    this.is_m_select_build = false;
-                    this.$router.push({ name: 'product.catalog', params: {} });
-                }).catch(error => {
-                        this.error_message = error.response.data.message || error.message;
-                }).then(() => this.saving = false);
+            if(form.title.value == ''){
+                this.saving = false;
+                this.error_message = 'Помилка даних. Виправьте помилки і знову надішліть форму.';
+                this.category_errors.title = 'Вкажіть назву категорії';
             }else{
-                api.createCatalog({
-                    title: form.title.value,
-                    parent_id: parent_id
-                }).then((response) => {
-                    M.toast({html: 'Категорія додана!'})
-                    instance_modal.close();
+                this.saving = true;
+                this.error_message = null;
+                this.category_errors.title = '';
 
-                    this.is_m_build = false;
-                    this.popup_catalog = null;
-                    this.is_m_select_build = false;
-                    this.$router.push({ name: 'product.catalog', params: {} });
-                }).catch(error => {
-                    this.error_message = error.response.data.message || error.message;
-                }).then(() => this.saving = false);
+                if(form.id.value != ''){
+                    api.updateCatalog(form.id.value, {
+                        title: form.title.value,
+                        parent_id: parent_id
+                    }).then((response) => {
+                        M.toast({html: 'Категорія відредагована!'})
+                        instance_modal.close();
+    
+                        this.is_m_build = false;
+                        this.popup_catalog = null;
+                        this.is_m_select_build = false;
+                        this.$router.push({ name: 'product.catalog', params: {} });
+                    }).catch(error => {
+                        this.error_message = error.response.data.message || error.message;
+                    }).then(() => this.saving = false);
+                }else{
+                    api.createCatalog({
+                        title: form.title.value,
+                        parent_id: parent_id
+                    }).then((response) => {
+                        M.toast({html: 'Категорія додана!'})
+                        instance_modal.close();
+
+                        this.is_m_build = false;
+                        this.popup_catalog = null;
+                        this.is_m_select_build = false;
+                        this.$router.push({ name: 'product.catalog', params: {} });
+                    }).catch(error => {
+                        this.error_message = error.response.data.message || error.message;
+                    }).then(() => this.saving = false);
+                }
             }
         },
         deleteCategory(item){
@@ -367,9 +380,14 @@
         cancelCategory(){
             this.saving = false;
             this.error_message = null;
+            this.category_errors.title = '';
             this.is_m_select_build = false;
             //this.selectedCategoryRecord = null;
             this.popup_catalog = null;
+
+            var elems_modal = document.getElementById('modal1');
+            var instance_modal = M.Modal.getInstance(elems_modal);
+            instance_modal.close();
         },
         setData(err, { data: catalog_items }) {
             if (err) {
@@ -448,5 +466,13 @@
         border-bottom: 1px solid lightgrey !important;
         box-shadow: 0 1px 0 0 lightgrey !important;
     }
+
+    .helper-text{
+        position: relative !important;
+        min-height: 18px !important;
+        display: block !important;
+        font-size: 12px !important;
+        color: red !important; }
+
 
 </style>
