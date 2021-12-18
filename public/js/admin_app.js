@@ -3487,6 +3487,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3507,6 +3517,19 @@ var getProductParams = function getProductParams(callback) {
   data: function data() {
     return {
       error_message: null,
+      product_errors: {
+        category_id: '',
+        type_id: '',
+        brand_id: '',
+        title: "",
+        short_description: "",
+        description: "",
+        composition: "",
+        price: "",
+        image: "",
+        items_on_stock: "",
+        attachment: ''
+      },
       message: null,
       loaded: false,
       saving: false,
@@ -3603,7 +3626,7 @@ var getProductParams = function getProductParams(callback) {
     returnToCategory: function returnToCategory() {
       this.loaded = false;
       materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-        html: 'Перенаправлення в категорію'
+        html: 'Виконується перенаправлення до категорії'
       });
       var catalog_id = this.product.category_id;
       this.$router.push({
@@ -3646,28 +3669,97 @@ var getProductParams = function getProductParams(callback) {
       this.message = false;
       this.error_message = null;
       this.loaded = false;
+      this.product_errors.type_id = ' ';
+      this.product_errors.brand_id = ' ';
+      this.product_errors.title = ' ';
+      this.product_errors.short_description = ' ';
+      this.product_errors.description = ' ';
+      this.product_errors.composition = ' ';
+      this.product_errors.price = ' ';
+      this.product_errors.items_on_stock = ' ';
+      this.product_errors.attachment = ' ';
+      var that = this;
       axios__WEBPACK_IMPORTED_MODULE_3___default.a.post('/api/product', this.product).then(function (response) {
+        _this.loaded = true;
         materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
           html: 'Продукт додан до каталогу'
         });
-        _this.product.id = response.data.data.id; //                    this.$router.push({ name: 'users.index'});
       })["catch"](function (error) {
-        _this.error_message = error.response.data.message || error.message;
+        _this.loaded = true;
+        that.loaded = true;
+        that.saving = false;
+        _this.error_message = 'Помилка даних. Виправьте помилки і знову надішліть форму.';
+        var product_errors = {
+          category_id: 'Оберіть категорію продукту',
+          type_id: 'Оберіть тип продукту',
+          brand_id: 'Оберіть бренд продукту',
+          title: "Вкажіть назву продукту",
+          short_description: "Додайте стислий опис продукту",
+          description: "Додайте повний опис продукту",
+          composition: "Додайте склад продукту",
+          price: "Вкажіть ціну продукту",
+          image: "Завантажте фото продукту",
+          items_on_stock: "Вкажіть кількість продукту",
+          attachment: "Завантажте фото продукту"
+        };
+        $.each(error.response.data.errors, function (ii, vv) {
+          switch (ii) {
+            case 'type_id':
+              that.product_errors.type_id = product_errors.type_id;
+              break;
+
+            case 'brand_id':
+              that.product_errors.brand_id = product_errors.brand_id;
+              break;
+
+            case 'title':
+              that.product_errors.title = product_errors.title;
+              break;
+
+            case 'short_description':
+              that.product_errors.short_description = product_errors.short_description;
+              break;
+
+            case 'description':
+              that.product_errors.description = product_errors.description;
+              break;
+
+            case 'composition':
+              that.product_errors.composition = product_errors.composition;
+              break;
+
+            case 'price':
+              that.product_errors.price = product_errors.price;
+              break;
+
+            case 'items_on_stock':
+              that.product_errors.items_on_stock = product_errors.items_on_stock;
+              break;
+
+            case 'attachment':
+              that.product_errors.attachment = product_errors.attachment;
+              break;
+          }
+        });
       }).then(function () {
         _this.saving = false;
         var catalog_id = _this.product.category_id;
-        _this.loaded = false;
-        materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-          html: 'Перенаправлення в категорію'
-        }); // /admin/products/category/:catalog_id
+        _this.loaded = true;
 
-        _this.$router.push({
-          path: "/admin/products/category/".concat(catalog_id),
-          params: {
-            catalog_id: catalog_id
-          },
-          props: true
-        });
+        if (!_this.error_message) {
+          materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
+            html: 'Виконується перенаправлення до категорії'
+          });
+          _this.loaded = false;
+
+          _this.$router.push({
+            path: "/admin/products/category/".concat(catalog_id),
+            params: {
+              catalog_id: catalog_id
+            },
+            props: true
+          });
+        }
       });
     },
     setParams: function setParams(err, _ref) {
@@ -3887,6 +3979,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3907,6 +4008,19 @@ var getProductParams = function getProductParams(callback) {
   data: function data() {
     return {
       error_message: null,
+      product_errors: {
+        category_id: '',
+        type_id: '',
+        brand_id: '',
+        title: "",
+        short_description: "",
+        description: "",
+        composition: "",
+        price: "",
+        image: "",
+        items_on_stock: "",
+        attachment: ''
+      },
       is_updated: false,
       message: null,
       loaded: false,
@@ -3993,8 +4107,6 @@ var getProductParams = function getProductParams(callback) {
       this.is_updated = true; //            $.each(this.attributes_selected, function (i, v) {
       //                $("input[type='checkbox'][value='" + v + "']").prop('checked', true);
       //            });
-
-      this.is_updated = true;
     }
   },
   created: function created() {
@@ -4092,7 +4204,7 @@ var getProductParams = function getProductParams(callback) {
     returnToCategory: function returnToCategory() {
       this.loaded = false;
       materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-        html: 'Перенаправлення в категорію'
+        html: 'Виконується перенаправлення до категорії'
       });
       var catalog_id = this.product.category_id;
       this.$router.push({
@@ -4110,31 +4222,100 @@ var getProductParams = function getProductParams(callback) {
       this.message = false;
       this.error_message = null;
       this.loaded = false;
+      this.product_errors.type_id = ' ';
+      this.product_errors.brand_id = ' ';
+      this.product_errors.title = ' ';
+      this.product_errors.short_description = ' ';
+      this.product_errors.description = ' ';
+      this.product_errors.composition = ' ';
+      this.product_errors.price = ' ';
+      this.product_errors.items_on_stock = ' ';
+      this.product_errors.attachment = ' ';
       this.product.short_description = CKEDITOR.instances['short_description'].getData();
       this.product.description = CKEDITOR.instances['description'].getData();
       this.product.composition = CKEDITOR.instances['composition'].getData();
+      var that = this;
       axios__WEBPACK_IMPORTED_MODULE_3___default.a.put('/api/product', this.product).then(function (response) {
         materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
           html: 'Продукт відредагован'
         });
         _this2.loaded = true;
       })["catch"](function (error) {
-        _this2.error_message = error.response.data.message || error.message;
+        _this2.loaded = true;
+        that.loaded = true;
+        that.saving = false;
+        _this2.error_message = 'Помилка даних. Виправьте помилки і знову надішліть форму.';
+        var product_errors = {
+          category_id: 'Оберіть категорію продукту',
+          type_id: 'Оберіть тип продукту',
+          brand_id: 'Оберіть бренд продукту',
+          title: "Вкажіть назву продукту",
+          short_description: "Додайте стислий опис продукту",
+          description: "Додайте повний опис продукту",
+          composition: "Додайте склад продукту",
+          price: "Вкажіть ціну продукту",
+          image: "Завантажте фото продукту",
+          items_on_stock: "Вкажіть кількість продукту",
+          attachment: "Завантажте фото продукту"
+        };
+        $.each(error.response.data.errors, function (ii, vv) {
+          switch (ii) {
+            case 'type_id':
+              that.product_errors.type_id = product_errors.type_id;
+              break;
+
+            case 'brand_id':
+              that.product_errors.brand_id = product_errors.brand_id;
+              break;
+
+            case 'title':
+              that.product_errors.title = product_errors.title;
+              break;
+
+            case 'short_description':
+              that.product_errors.short_description = product_errors.short_description;
+              break;
+
+            case 'description':
+              that.product_errors.description = product_errors.description;
+              break;
+
+            case 'composition':
+              that.product_errors.composition = product_errors.composition;
+              break;
+
+            case 'price':
+              that.product_errors.price = product_errors.price;
+              break;
+
+            case 'items_on_stock':
+              that.product_errors.items_on_stock = product_errors.items_on_stock;
+              break;
+
+            case 'attachment':
+              that.product_errors.attachment = product_errors.attachment;
+              break;
+          }
+        });
       }).then(function () {
         _this2.saving = false;
-        _this2.loaded = false;
-        materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-          html: 'Перенаправлення в категорію'
-        });
-        var catalog_id = _this2.product.category_id;
+        _this2.loaded = true;
 
-        _this2.$router.push({
-          path: "/admin/products/category/".concat(catalog_id),
-          params: {
-            catalog_id: catalog_id
-          },
-          props: true
-        });
+        if (!_this2.error_message) {
+          materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
+            html: 'Виконується перенаправлення до категорії'
+          });
+          _this2.loaded = false;
+          var catalog_id = _this2.product.category_id;
+
+          _this2.$router.push({
+            path: "/admin/products/category/".concat(catalog_id),
+            params: {
+              catalog_id: catalog_id
+            },
+            props: true
+          });
+        }
       });
     }
   }
@@ -4268,7 +4449,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.tabs .indicator{\n    background-color: #0091ea;\n}\n.tabs .tab a:hover{\n    color: black;\n    background-color: white;\n}\n.tabs .tab a{\n    color: black;\n    background-color: white;\n    transition: none !important;\n}\n.tabs .tab a.active {\n    background-color: white;\n    color: black;\n    transition: none !important;\n}\n.tabs .tab a.active:hover {\n    background-color: white;\n    color: black;\n}\n#items_on_stock, #price, #product_name{\n    border-bottom: 1px solid lightgrey !important;\n    box-shadow: 0 1px 0 0 lightgrey !important;\n}\n", ""]);
+exports.push([module.i, "\n.tabs .indicator{\n    background-color: #0091ea;\n}\n.tabs .tab a:hover{\n    color: black;\n    background-color: white;\n}\n.tabs .tab a{\n    color: black;\n    background-color: white;\n    transition: none !important;\n}\n.tabs .tab a.active {\n    background-color: white;\n    color: black;\n    transition: none !important;\n}\n.tabs .tab a.active:hover {\n    background-color: white;\n    color: black;\n}\n#items_on_stock, #price, #product_name{\n    border-bottom: 1px solid lightgrey !important;\n    box-shadow: 0 1px 0 0 lightgrey !important;\n}\n.helper-text{\n    position: relative !important;\n    min-height: 18px !important;\n    display: block !important;\n    font-size: 12px !important;\n    color: red !important;\n}\n", ""]);
 
 // exports
 
@@ -4287,7 +4468,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.tabs .indicator{\n    background-color: #0091ea;\n}\n.tabs .tab a:hover{\n    color: black;\n    background-color: white;\n}\n.tabs .tab a{\n    color: black;\n    background-color: white;\n    transition: none !important;\n}\n.tabs .tab a.active {\n    background-color: white;\n    color: black;\n    transition: none !important;\n}\n.tabs .tab a.active:hover {\n    background-color: white;\n    color: black;\n}\n#items_on_stock, #price, #product_name{\n    border-bottom: 1px solid lightgrey !important;\n    box-shadow: 0 1px 0 0 lightgrey !important;\n}\n.tabs .tab a:focus, .tabs .tab a:focus.active{\n    background-color: white;\n}\n", ""]);
+exports.push([module.i, "\n.tabs .indicator{\n    background-color: #0091ea;\n}\n.tabs .tab a:hover{\n    color: black;\n    background-color: white;\n}\n.tabs .tab a{\n    color: black;\n    background-color: white;\n    transition: none !important;\n}\n.tabs .tab a.active {\n    background-color: white;\n    color: black;\n    transition: none !important;\n}\n.tabs .tab a.active:hover {\n    background-color: white;\n    color: black;\n}\n#items_on_stock, #price, #product_name{\n    border-bottom: 1px solid lightgrey !important;\n    box-shadow: 0 1px 0 0 lightgrey !important;\n}\n.tabs .tab a:focus, .tabs .tab a:focus.active{\n    background-color: white;\n}\n.helper-text{\n    position: relative !important;\n    min-height: 18px !important;\n    display: block !important;\n    font-size: 12px !important;\n    color: red !important;\n}\n", ""]);
 
 // exports
 
@@ -30756,7 +30937,7 @@ var render = function() {
                 : _vm._e(),
               _vm._v(" "),
               _vm.error_message
-                ? _c("div", { staticClass: "col s12 red text-white" }, [
+                ? _c("div", { staticClass: "col s12 helper-text" }, [
                     _vm._v(_vm._s(_vm.error_message))
                   ])
                 : _vm._e(),
@@ -30816,6 +30997,15 @@ var render = function() {
                             ])
                       ])
                     ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "helper-text",
+                      attrs: { "data-error": "", "data-success": "" }
+                    },
+                    [_vm._v(_vm._s(_vm.product_errors.attachment))]
                   )
                 ])
               ])
@@ -30848,7 +31038,16 @@ var render = function() {
                   _vm._v(" "),
                   _c("label", { attrs: { for: "product_name" } }, [
                     _vm._v("Назва продукту")
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "helper-text",
+                      attrs: { "data-error": "", "data-success": "" }
+                    },
+                    [_vm._v(_vm._s(_vm.product_errors.title))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-field col s12" }, [
@@ -30903,10 +31102,6 @@ var render = function() {
                               _vm._v(
                                 "\n                                    " +
                                   _vm._s(sub_item.title) +
-                                  " :: " +
-                                  _vm._s(sub_item.id) +
-                                  " :: " +
-                                  _vm._s(_vm.$route.params.catalog_id) +
                                   "\n                                "
                               )
                             ]
@@ -30920,7 +31115,16 @@ var render = function() {
                   _vm._v(" "),
                   _c("label", { attrs: { for: "category_id" } }, [
                     _vm._v("Категорія")
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "helper-text",
+                      attrs: { "data-error": "", "data-success": "" }
+                    },
+                    [_vm._v(_vm._s(_vm.product_errors.category_id))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-field col s12" }, [
@@ -30965,8 +31169,6 @@ var render = function() {
                           _vm._v(
                             "\n                                " +
                               _vm._s(item.type_title) +
-                              " :: " +
-                              _vm._s(item.id) +
                               "\n                            "
                           )
                         ])
@@ -30977,7 +31179,16 @@ var render = function() {
                   _vm._v(" "),
                   _c("label", { attrs: { for: "type_id" } }, [
                     _vm._v("Тип продукту")
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "helper-text",
+                      attrs: { "data-error": "", "data-success": "" }
+                    },
+                    [_vm._v(_vm._s(_vm.product_errors.type_id))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-field col s12" }, [
@@ -31022,8 +31233,6 @@ var render = function() {
                           _vm._v(
                             "\n                                " +
                               _vm._s(item.brand_title) +
-                              " :: " +
-                              _vm._s(item.id) +
                               " (" +
                               _vm._s(item.country_title) +
                               ")\n                            "
@@ -31034,7 +31243,18 @@ var render = function() {
                     2
                   ),
                   _vm._v(" "),
-                  _c("label", { attrs: { for: "brand_id" } }, [_vm._v("Бренд")])
+                  _c("label", { attrs: { for: "brand_id" } }, [
+                    _vm._v("Бренд")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "helper-text",
+                      attrs: { "data-error": "", "data-success": "" }
+                    },
+                    [_vm._v(_vm._s(_vm.product_errors.brand_id))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-field col s12" }, [
@@ -31062,7 +31282,16 @@ var render = function() {
                   _vm._v(" "),
                   _c("label", { attrs: { for: "price" } }, [
                     _vm._v("Ціна, грн")
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "helper-text",
+                      attrs: { "data-error": "", "data-success": "" }
+                    },
+                    [_vm._v(_vm._s(_vm.product_errors.price))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-field col s12" }, [
@@ -31094,7 +31323,16 @@ var render = function() {
                   _vm._v(" "),
                   _c("label", { attrs: { for: "items_on_stock" } }, [
                     _vm._v("Кількість в наявності")
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "helper-text",
+                      attrs: { "data-error": "", "data-success": "" }
+                    },
+                    [_vm._v(_vm._s(_vm.product_errors.items_on_stock))]
+                  )
                 ])
               ])
             ])
@@ -31141,7 +31379,16 @@ var render = function() {
                             )
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.short_description))]
+                      )
                     ]
                   )
                 ])
@@ -31183,7 +31430,16 @@ var render = function() {
                             )
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.description))]
+                      )
                     ]
                   )
                 ])
@@ -31225,7 +31481,16 @@ var render = function() {
                             )
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.composition))]
+                      )
                     ]
                   )
                 ])
@@ -31302,9 +31567,7 @@ var render = function() {
                                   }
                                 }),
                                 _vm._v(" "),
-                                _c("span", [
-                                  _vm._v(_vm._s(title) + " :: " + _vm._s(id))
-                                ])
+                                _c("span", [_vm._v(_vm._s(title))])
                               ])
                             ])
                           }),
@@ -31392,9 +31655,7 @@ var render = function() {
                                     }
                                   }),
                                   _vm._v(" "),
-                                  _c("span", [
-                                    _vm._v(_vm._s(title) + " :: " + _vm._s(id))
-                                  ])
+                                  _c("span", [_vm._v(_vm._s(title))])
                                 ])
                               ])
                             }),
@@ -31583,7 +31844,7 @@ var render = function() {
                 : _vm._e(),
               _vm._v(" "),
               _vm.error_message
-                ? _c("div", { staticClass: "col s12 red text-white" }, [
+                ? _c("div", { staticClass: "col s12 helper-text" }, [
                     _vm._v(_vm._s(_vm.error_message))
                   ])
                 : _vm._e(),
@@ -31648,6 +31909,15 @@ var render = function() {
                                 ])
                           ])
                         ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.attachment))]
                       )
                     ])
                   ])
@@ -31684,7 +31954,16 @@ var render = function() {
                       _vm._v(" "),
                       _c("label", { attrs: { for: "product_name" } }, [
                         _vm._v("Назва продукту")
-                      ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.title))]
+                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-field col s12" }, [
@@ -31755,7 +32034,16 @@ var render = function() {
                       _vm._v(" "),
                       _c("label", { attrs: { for: "category_id" } }, [
                         _vm._v("Категорія")
-                      ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.category_id))]
+                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-field col s12" }, [
@@ -31816,7 +32104,16 @@ var render = function() {
                       _vm._v(" "),
                       _c("label", { attrs: { for: "type_id" } }, [
                         _vm._v("Тип продукту")
-                      ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.type_id))]
+                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-field col s12" }, [
@@ -31879,7 +32176,16 @@ var render = function() {
                       _vm._v(" "),
                       _c("label", { attrs: { for: "brand_id" } }, [
                         _vm._v("Бренд")
-                      ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.brand_id))]
+                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-field col s12" }, [
@@ -31907,7 +32213,16 @@ var render = function() {
                       _vm._v(" "),
                       _c("label", { attrs: { for: "price" } }, [
                         _vm._v("Ціна, грн")
-                      ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.price))]
+                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-field col s12" }, [
@@ -31939,7 +32254,16 @@ var render = function() {
                       _vm._v(" "),
                       _c("label", { attrs: { for: "items_on_stock" } }, [
                         _vm._v("Кількість в наявності")
-                      ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "helper-text",
+                          attrs: { "data-error": "", "data-success": "" }
+                        },
+                        [_vm._v(_vm._s(_vm.product_errors.items_on_stock))]
+                      )
                     ])
                   ])
                 ])
@@ -32033,7 +32357,16 @@ var render = function() {
                                 )
                               }
                             }
-                          })
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "helper-text",
+                              attrs: { "data-error": "", "data-success": "" }
+                            },
+                            [_vm._v(_vm._s(_vm.product_errors.description))]
+                          )
                         ]
                       )
                     ])
@@ -32078,7 +32411,16 @@ var render = function() {
                                 )
                               }
                             }
-                          })
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "helper-text",
+                              attrs: { "data-error": "", "data-success": "" }
+                            },
+                            [_vm._v(_vm._s(_vm.product_errors.composition))]
+                          )
                         ]
                       )
                     ])

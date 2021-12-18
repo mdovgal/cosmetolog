@@ -36,7 +36,10 @@
 <body>
 
 <nav class="light-blue accent-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="{{ url('/') }}" class="brand-logo">Logo</a>
+    <div class="nav-wrapper container">
+        <a id="logo-container" href="{{ url('/') }}" class="brand-logo">
+            <img src="/img/logo_blue.png" style="width:55px;padding-top:5px;"/>
+        </a>
     @guest
         <ul class="right hide-on-med-and-down">
             <li><a href="{{ route('login') }}">Вхід</a></li>

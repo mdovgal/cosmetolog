@@ -59,11 +59,11 @@ class ProductController extends Controller
             'type_id' => 'required|numeric|gt:0',
             'brand_id' => 'numeric',
             'title' => 'required',
-            'short_description' => 'string|min:15',
-            'description' => 'string|min:25',
-            'composition' => 'string|min:5',
+            'short_description' => 'required|string',
+            'description' => 'required|string',
+            'composition' => 'required|string',
             'price' => 'required|numeric|gt:0',
-            'items_on_stock' => 'required|numeric',
+            'items_on_stock' => 'required|numeric|gt:0',
             'attributes' => 'array'
         ];
 

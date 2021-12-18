@@ -16,17 +16,17 @@ class AddRoleToUsers extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table
                 ->enum('role', ['admin', 'custm', 'cosmt'])
-                ->default('customer')
+                ->default('custm')
                 ->after('email');
         });
         Schema::table('users', function (Blueprint $table) {
             $table
-                ->string('phone')
+                ->string('phone')->nullable()
                 ->after('email');
         });
         Schema::table('users', function (Blueprint $table) {
             $table
-                ->string('main_delivery_address')
+                ->string('main_delivery_address')->nullable()
                 ->after('phone');
         });
     }
