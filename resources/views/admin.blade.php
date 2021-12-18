@@ -42,16 +42,19 @@
         </a>
     @guest
         <ul class="right hide-on-med-and-down">
-            <li><a href="{{ route('login') }}">Вхід</a></li>
+            <li><a href="{{ route('login') }}">Вхід - ADMIN</a></li>
             @if (Route::has('register'))
                 <li>
-                    <a href="{{ route('register') }}">Зареєструватись</a>
+                    <a href="{{ route('register') }}">Зареєструватись - ADMIN</a>
                 </li>
             @endif
         </ul>
     @else
       <ul class="right hide-on-med-and-down text-blue text-darken-4">
-        <li><a class="text-blue text-darken-4" href="{{ url('/admin') }}">Вітаємо, {{ Auth::user()->name }}! [{{ Auth::user()->role }}]</a></li>
+        <li><a class="text-blue text-darken-4" href="{{ url('/admin') }}">Вітаємо, {{ Auth::user()->name }}!</a></li>
+        @if(Auth::user()->role =='admin')
+        <li><a class="text-blue text-darken-4" href="{{ url('/') }}">Web Site</a></li>
+        @endif
         <li><a class="text-blue text-darken-4" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             Вихід
         </a></li>

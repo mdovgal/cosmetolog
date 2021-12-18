@@ -6,7 +6,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-import App from './views/App'
+import App from './views/AppAdmin'
 import ProductCatalog from './views/admin/ProductCatalog'
 import ProductCreate from './views/admin/ProductCreate'
 import ProductEdit from './views/admin/ProductEdit'

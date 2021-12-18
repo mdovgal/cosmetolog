@@ -93,7 +93,7 @@
                             </form>
                         </li>
                     @else
-                        <a href="{{ route('login') }}">Вхід</a>
+                        <a href="{{ route('login') }}">Вхід - WELCOME</a>
 
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}">Зареєструватись</a>
@@ -104,7 +104,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Косметика
+                    Косметика [resorses/views/welcome.blade]
                 </div>
 
                 <div class="links">

@@ -24,7 +24,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Косметика - адмінка
+                    Косметика [resourses/view/layouts/app.blade]
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -42,7 +42,7 @@
                         @guest
 
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">111 - {{ __('Вхід') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">app blade - {{ __('Вхід') }}</a>
                             </li>
 
                             @if (Route::has('register'))
