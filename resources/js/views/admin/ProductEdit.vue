@@ -393,6 +393,7 @@
                 this.error_message = null;
                 this.loaded = false;
 
+                this.product_errors.category_id = ' ';
                 this.product_errors.type_id = ' ';
                 this.product_errors.brand_id = ' ';
                 this.product_errors.title = ' ';
@@ -436,6 +437,8 @@
 
                     $.each(error.response.data.errors, function(ii, vv){
                         switch (ii) {
+                            case 'category_id':
+                                that.product_errors.category_id = product_errors.category_id;
                             case 'type_id':
                                 that.product_errors.type_id = product_errors.type_id;
                                 break;
@@ -472,6 +475,18 @@
                     if(!this.error_message){
                         M.toast({html: 'Виконується перенаправлення до категорії'});
                         this.loaded = false;
+                        this.error_message = null;
+                        this.product_errors.category_id = ' ';
+                        this.product_errors.type_id = ' ';
+                        this.product_errors.brand_id = ' ';
+                        this.product_errors.title = ' ';
+                        this.product_errors.short_description = ' ';
+                        this.product_errors.description = ' ';
+                        this.product_errors.composition = ' ';
+                        this.product_errors.price = ' ';
+                        this.product_errors.items_on_stock = ' ';
+                        this.product_errors.attachment = ' ';
+
                         var catalog_id = this.product.category_id;
 
                         this.$router.push({

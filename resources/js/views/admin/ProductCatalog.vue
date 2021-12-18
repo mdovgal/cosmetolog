@@ -93,8 +93,8 @@
                         <div class="indeterminate"></div>
                     </div>
                 </div>
-                <div class="col s3">
-                    <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addProduct(selectedCategoryRecord)">
+                <div class="col s3" v-if="selectedCategoryRecord">
+                    <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addProduct(selectedCategoryRecord)" v-if="selectedCategoryRecord.parent_id">
                         <i class="material-icons left">add</i>
                         Додати продукт
                     </a>
@@ -206,6 +206,7 @@
         },
         mounted(){
             setTimeout(() => {
+                $("#general_loader").hide();
                 var current_menu_item = $("menu a").first();
                 if(!current_menu_item.hasClass('router-link-exact-active'))current_menu_item.addClass('router-link-exact-active');
             }, 50);
@@ -265,6 +266,12 @@
             }
         },
         addProduct(category_item){
+
+            if(!category_item.parent_id){
+                alert('Оберіть підкатегорію');
+                return;
+            }
+
             var catalog_id = category_item.id;
             this.$router.push({
                 path: `/admin/catalog/${catalog_id}/product/create`,
@@ -396,6 +403,7 @@
             if(confirm( confirm_message )){
                 this.saving_category = true;
                 this.delete_category = true;
+                this.selectedCategoryRecord = null;
 
                 api.deleteCategory(item.id )
                 .then((response) => {

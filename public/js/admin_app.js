@@ -2202,6 +2202,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
@@ -3087,6 +3089,7 @@ var getProducts = function getProducts(callback) {
   },
   mounted: function mounted() {
     setTimeout(function () {
+      $("#general_loader").hide();
       var current_menu_item = $("menu a").first();
       if (!current_menu_item.hasClass('router-link-exact-active')) current_menu_item.addClass('router-link-exact-active');
     }, 50);
@@ -3153,6 +3156,11 @@ var getProducts = function getProducts(callback) {
       }
     },
     addProduct: function addProduct(category_item) {
+      if (!category_item.parent_id) {
+        alert('Оберіть підкатегорію');
+        return;
+      }
+
       var catalog_id = category_item.id;
       this.$router.push({
         path: "/admin/catalog/".concat(catalog_id, "/product/create"),
@@ -3284,6 +3292,7 @@ var getProducts = function getProducts(callback) {
       if (confirm(confirm_message)) {
         this.saving_category = true;
         this.delete_category = true;
+        this.selectedCategoryRecord = null;
         _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].deleteCategory(item.id).then(function (response) {
           materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
             html: 'Категорія видалена!'
@@ -3664,6 +3673,17 @@ var getProductParams = function getProductParams(callback) {
       materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
         html: 'Виконується перенаправлення до категорії'
       });
+      this.error_message = null;
+      this.product_errors.category_id = ' ';
+      this.product_errors.type_id = ' ';
+      this.product_errors.brand_id = ' ';
+      this.product_errors.title = ' ';
+      this.product_errors.short_description = ' ';
+      this.product_errors.description = ' ';
+      this.product_errors.composition = ' ';
+      this.product_errors.price = ' ';
+      this.product_errors.items_on_stock = ' ';
+      this.product_errors.attachment = ' ';
       var catalog_id = this.product.category_id;
       this.$router.push({
         path: "/admin/products/category/".concat(catalog_id),
@@ -3705,6 +3725,7 @@ var getProductParams = function getProductParams(callback) {
       this.message = false;
       this.error_message = null;
       this.loaded = false;
+      this.product_errors.category_id = ' ';
       this.product_errors.type_id = ' ';
       this.product_errors.brand_id = ' ';
       this.product_errors.title = ' ';
@@ -3740,6 +3761,10 @@ var getProductParams = function getProductParams(callback) {
         };
         $.each(error.response.data.errors, function (ii, vv) {
           switch (ii) {
+            case 'category_id':
+              that.product_errors.category_id = product_errors.category_id;
+              break;
+
             case 'type_id':
               that.product_errors.type_id = product_errors.type_id;
               break;
@@ -4258,6 +4283,7 @@ var getProductParams = function getProductParams(callback) {
       this.message = false;
       this.error_message = null;
       this.loaded = false;
+      this.product_errors.category_id = ' ';
       this.product_errors.type_id = ' ';
       this.product_errors.brand_id = ' ';
       this.product_errors.title = ' ';
@@ -4296,6 +4322,9 @@ var getProductParams = function getProductParams(callback) {
         };
         $.each(error.response.data.errors, function (ii, vv) {
           switch (ii) {
+            case 'category_id':
+              that.product_errors.category_id = product_errors.category_id;
+
             case 'type_id':
               that.product_errors.type_id = product_errors.type_id;
               break;
@@ -4342,6 +4371,17 @@ var getProductParams = function getProductParams(callback) {
             html: 'Виконується перенаправлення до категорії'
           });
           _this2.loaded = false;
+          _this2.error_message = null;
+          _this2.product_errors.category_id = ' ';
+          _this2.product_errors.type_id = ' ';
+          _this2.product_errors.brand_id = ' ';
+          _this2.product_errors.title = ' ';
+          _this2.product_errors.short_description = ' ';
+          _this2.product_errors.description = ' ';
+          _this2.product_errors.composition = ' ';
+          _this2.product_errors.price = ' ';
+          _this2.product_errors.items_on_stock = ' ';
+          _this2.product_errors.attachment = ' ';
           var catalog_id = _this2.product.category_id;
 
           _this2.$router.push({
@@ -29109,19 +29149,28 @@ var render = function() {
         _vm._v(" |\n        "),
         _c("router-link", { attrs: { to: { name: "orders" } } }, [
           _vm._v("Замовлення")
-        ]),
-        _vm._v(" |\n        "),
-        _c("router-link", { attrs: { to: { name: "users.index" } } }, [
-          _vm._v("Приклад: автори блогів")
         ])
       ],
       1
     ),
     _vm._v(" "),
+    _vm._m(0),
+    _vm._v(" "),
     _c("div", [_c("router-view")], 1)
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "progress", attrs: { id: "general_loader" } },
+      [_c("div", { staticClass: "indeterminate" })]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -30746,30 +30795,36 @@ var render = function() {
                   : _vm._e()
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col s3" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass:
-                      "waves-effect waves-light btn light-blue add_catalog_head",
-                    staticStyle: { width: "100%" },
-                    attrs: { disabled: _vm.saving },
-                    on: {
-                      click: function($event) {
-                        return _vm.addProduct(_vm.selectedCategoryRecord)
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "material-icons left" }, [
-                      _vm._v("add")
-                    ]),
-                    _vm._v(
-                      "\n                        Додати продукт\n                    "
-                    )
-                  ]
-                )
-              ])
+              _vm.selectedCategoryRecord
+                ? _c("div", { staticClass: "col s3" }, [
+                    _vm.selectedCategoryRecord.parent_id
+                      ? _c(
+                          "a",
+                          {
+                            staticClass:
+                              "waves-effect waves-light btn light-blue add_catalog_head",
+                            staticStyle: { width: "100%" },
+                            attrs: { disabled: _vm.saving },
+                            on: {
+                              click: function($event) {
+                                return _vm.addProduct(
+                                  _vm.selectedCategoryRecord
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "material-icons left" }, [
+                              _vm._v("add")
+                            ]),
+                            _vm._v(
+                              "\n                        Додати продукт\n                    "
+                            )
+                          ]
+                        )
+                      : _vm._e()
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
