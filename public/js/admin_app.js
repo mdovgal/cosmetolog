@@ -3769,8 +3769,6 @@ var getProductParams = function getProductParams(callback) {
         html: 'M::UPDATED!'
       });
       materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.updateTextFields();
-      var elems_select = document.querySelectorAll('select');
-      var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select, {});
       var elems_tab = document.querySelectorAll('.tabs');
       var instance_tab = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Tabs.init(elems_tab, {
         duration: 0
@@ -3819,6 +3817,9 @@ var getProductParams = function getProductParams(callback) {
       //                $("input[type='checkbox'][value='" + v + "']").prop('checked', true);
       //            });
     }
+
+    var elems_select = document.querySelectorAll('select');
+    var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select, {});
   },
   created: function created() {
     var _this = this;
@@ -3832,11 +3833,13 @@ var getProductParams = function getProductParams(callback) {
         $.each(v, function (pp, vv) {
           if (pp == 'catalog') {
             that.catalog = vv;
-            var elems_select = document.querySelectorAll('select');
-            var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select, {});
-            materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-              html: 'M::SELECT UPDATED!!!'
-            });
+            setTimeout(function () {
+              var elems_select = document.querySelectorAll('select');
+              var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select, {});
+              materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
+                html: 'M::SELECT UPDATED in setTimeout!!!'
+              });
+            }, 50);
           }
 
           if (pp == 'types') {

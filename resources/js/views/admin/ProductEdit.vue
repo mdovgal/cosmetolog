@@ -256,8 +256,6 @@ console.log('~~> this.is_updated', this.is_updated);
             if(!this.is_updated) {
                 M.toast({html: 'M::UPDATED!'});
                 M.updateTextFields();
-                var elems_select = document.querySelectorAll('select');
-                var instances_select = M.FormSelect.init(elems_select, {});
 
                 var elems_tab = document.querySelectorAll('.tabs');
                 var instance_tab = M.Tabs.init(elems_tab, {duration: 0});
@@ -301,6 +299,9 @@ console.log('~~> this.is_updated', this.is_updated);
     //                $("input[type='checkbox'][value='" + v + "']").prop('checked', true);
     //            });
             }
+
+            var elems_select = document.querySelectorAll('select');
+            var instances_select = M.FormSelect.init(elems_select, {});
         },
         created(){
             this.is_updated = false;
@@ -315,10 +316,12 @@ console.log('~~> this.is_updated', this.is_updated);
                                 if(pp == 'catalog'){
                                     that.catalog = vv;
 
+                                    setTimeout(() => {
+                                        var elems_select = document.querySelectorAll('select');
+                                        var instances_select = M.FormSelect.init(elems_select, {});
+M.toast({html: 'M::SELECT UPDATED in setTimeout!!!'});
+                                    }, 50);
 
-                                    var elems_select = document.querySelectorAll('select');
-                                    var instances_select = M.FormSelect.init(elems_select, {});
-                                    M.toast({html: 'M::SELECT UPDATED!!!'});
                                 }
                                 if(pp == 'types'){
                                     that.product_types = vv;
