@@ -23,6 +23,8 @@ Route::namespace('Api')->group(function () {
     Route::get('/product_params', 'ProductController@params');
     Route::get('/product_params/{product_id}', 'ProductController@params');
 
+    Route::get('/catalog/products', 'CatalogController@allcatalog');
+
 // Routers for Categories
     Route::get('/catalog', 'CatalogController@index');
     Route::put('/catalog/{catalog}', 'CatalogController@update');

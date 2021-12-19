@@ -35,4 +35,9 @@ class Catalog extends Model
 
         return $query;
     }
+
+    public function products()
+    {
+        return $this->hasMany('App\Product', 'category_id');
+    }
 }

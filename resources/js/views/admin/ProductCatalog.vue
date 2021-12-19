@@ -447,8 +447,6 @@
             } else {
                 this.catalog = catalog_items;
                 this.selectedCategoryRecord = null;
-console.log('~~~> this.is_m_build', this.is_m_build);
-console.log('~~~> this.is_m_select_build', this.is_m_select_build);
 
                 if(typeof this.$route.params.catalog_id !== "undefined"){
                     let router_item = null;

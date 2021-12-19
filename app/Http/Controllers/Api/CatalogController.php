@@ -18,6 +18,12 @@ class CatalogController extends Controller
         return CatalogResource::collection( $menuItems );
     }
 
+    public function allcatalog(){
+        $menuItems = Catalog::with('products')->orderBy('parent_id')->orderBy('title')->get();
+        $menuItems = $this->buildTree($menuItems);
+        return CatalogResource::collection( $menuItems );
+    }
+
     public function update(Catalog $catalog, Request $request)
     {
         $data = $request->validate([
