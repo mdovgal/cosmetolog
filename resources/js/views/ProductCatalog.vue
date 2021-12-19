@@ -54,7 +54,7 @@
                                             <img v-else src="/img/product_placeholder.png">
 
                                             <a class="btn-floating halfway-fab waves-effect waves-light blue edit" @click="addToCart( id, title )" v-if="items_on_stock"><i class="material-icons">add_shopping_cart</i></a>
-                                            <router-link :to="{ name: 'product.edit', params: { id } }" class="btn-floating halfway-fab waves-effect waves-light blue delete" >
+                                            <router-link :to="{ name: 'product.view', params: { id } }" class="btn-floating halfway-fab waves-effect waves-light blue delete" >
                                                 <i class="material-icons">description</i>
                                             </router-link>
 

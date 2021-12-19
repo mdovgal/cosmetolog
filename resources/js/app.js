@@ -6,6 +6,7 @@ Vue.use(VueRouter)
 
 import App from './views/App'
 import ProductCatalog from './views/ProductCatalog'
+import ProductView from './views/ProductView'
 import NotFound from './views/NotFound'
 
 const router = new VueRouter({
