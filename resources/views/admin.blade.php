@@ -50,12 +50,12 @@ menu a.active{font-size: 20px;
             @endif
         </ul>
     @else
-      <ul class="right hide-on-med-and-down text-blue text-darken-4">
-        <li><a class="text-blue text-darken-4" href="{{ url('/admin') }}">Вітаємо, {{ Auth::user()->name }}!</a></li>
+      <ul class="right hide-on-med-and-down indigo-text text-darken-4">
+        <li><a class="indigo-text text-darken-4" href="{{ url('/admin') }}">Вітаємо, {{ Auth::user()->name }}!</a></li>
         @if(Auth::user()->role =='admin')
-        <li><a class="text-blue text-darken-4" href="{{ url('/') }}">Web Site</a></li>
+        <li><a class="indigo-text text-darken-4" href="{{ url('/') }}">Web Site</a></li>
         @endif
-        <li><a class="text-blue text-darken-4" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        <li><a class="indigo-text text-darken-4" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             Вихід
         </a></li>
       </ul>
@@ -75,8 +75,8 @@ menu a.active{font-size: 20px;
 
     <footer class="page-footer light-blue accent-1">
         <div class="footer-copyright">
-          <div class="container">
-          Made by <a class="text-blue text-darken-4" href="http://materializecss.com">Materialize</a>
+          <div class="indigo-text text-darken-4 container">
+          Made by <a class="blue-text text-darken-4" href="https://www.instagram.com/vodya._.vodya/">DovIra</a>
           </div>
         </div>
       </footer>

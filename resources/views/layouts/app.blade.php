@@ -18,66 +18,84 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- materialize -->
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Косметика [resourses/view/layouts/app.blade]
+        <nav class="light-blue accent-1" role="navigation">
+            <div class="nav-wrapper container">
+                <a id="logo-container" href="{{ url('/') }}" class="brand-logo">
+                    <img src="/img/logo_blue.png" style="width:55px;padding-top:5px;"/>
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            @guest
+                <ul class="right hide-on-med-and-down">
+                <li>
+                   <a class="indigo-text text-darken-4" href="{{ route('login') }}">Вхід</a>
+               </li>
+                    @if (Route::has('register'))
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                        <li>
+                            <a class="indigo-text text-darken-4" href="{{ route('register') }}">Зареєструватись</a>
+                        </li>
+                    @endif
+                </ul>
+            @else
+              <ul class="right hide-on-med-and-down indigo-text text-darken-4">
+                <li><a class="indigo-text text-darken-4" href="{{ url('/admin') }}">Вітаємо, {{ Auth::user()->name }}!</a></li>
+                @if(Auth::user()->role =='admin')
+                <li><a class="indigo-text text-darken-4" href="{{ url('/') }}">Web Site</a></li>
+                @endif
+                <li><a class="indigo-text text-darken-4" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Вихід
+                </a></li>
+              </ul>
 
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">app blade - {{ __('Вхід') }}</a>
-                            </li>
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Вихід') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                  @csrf
+              </form>
+              @endguest
             </div>
-        </nav>
+          </nav>
 
         <main class="py-4">
             @yield('content')
         </main>
-    </div>
+
+    <footer class="page-footer light-blue accent-1">
+            <div class="footer-copyright">
+              <div class="indigo-text text-darken-4 container">
+              Made by <a class="blue-text text-darken-4" href="https://www.instagram.com/vodya._.vodya/">DovIra</a>
+              </div>
+            </div>
+          </footer>
+<style>
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+main {
+  flex: 1 0 auto;
+}
+main.container {
+  max-width: 1400px;
+  width: 90%;
+}
+.progress {
+        background-color: #2196f3 !important;
+    }
+    .progress .indeterminate {
+        background-color: #90caf9 !important;
+    }
+
+#email, #password, #name, #email, #password, #password-confirm{
+        border-bottom: 1px solid lightgrey !important;
+        box-shadow: 0 1px 0 0 lightgrey !important;
+    }
+</style>
 </body>
 </html>

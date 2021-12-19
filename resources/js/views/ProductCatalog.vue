@@ -7,20 +7,24 @@
 
 
         <div class="col s3" style="margin-top: 20px;">
-            <h5>Каталог</h5>
+            <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" @click="processSurvey()">
+                <i class="material-icons left">apps</i>
+                Підібрати догляд
+            </a>
             <ul class="collapsible">
                 <li v-for="item in catalog" v-if="item.parent_id == 0" :class="{ 'active': item.id == catalog[0].id }"  :key="item.id">
                     <div class="collapsible-header"><i class="material-icons">whatshot</i>
                             <span  style="width:100%;">{{ item.title }}</span>
-                        <i class="material-icons right md-24" @click="editCategory(item)">edit</i>
-                        <i class="material-icons right md-24" @click="deleteCategory(item)">delete</i>
                     </div>
                     <div class="collapsible-body" v-if="item.parent_id == 0">
                         <ul class="collection">
                             <li class="collection-item" v-for="sub_item in item.children" :key="sub_item.id">
-                                <span  @click="viewProductList(sub_item)" style="cursor:pointer;">{{ sub_item.title }}</span>
-                                <i class="material-icons right md-18" style="cursor:pointer;" @click="deleteCategory(sub_item)">delete</i>
-                                <i class="material-icons right md-18" style="cursor:pointer;" @click="editCategory(sub_item)">edit</i>
+                                <span @click="viewProductList(sub_item)" style="cursor:pointer;">
+                                    <span class="new badge blue light-blue indigo-text" data-badge-caption="">
+                                        {{ count_products(sub_item) }}
+                                    </span>
+                                    {{ sub_item.title }}
+                                </span>
                             </li>
                         </ul>
                     </div>
@@ -30,17 +34,11 @@
 
         <div class="col s9" style="margin-top: 20px; padding-left: 25px;"  v-if="selectedCategoryRecord"  ref="selectedCategoryRecordModal">
             <div class="row">
-                <div class="col s9">
-                    <h5 style="margin-top: 0px;">Категорія: {{ selectedCategoryRecord.title }}</h5>
+                <div class="col s12">
+                    <h5 style="margin-top: 0px;">{{ selectedCategoryRecord.title }}</h5>
                     <div class="progress" v-if="! loaded && catalog && !products">
                         <div class="indeterminate"></div>
                     </div>
-                </div>
-                <div class="col s3" v-if="selectedCategoryRecord">
-                    <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" :disabled="saving" @click="addProduct(selectedCategoryRecord)" v-if="selectedCategoryRecord.parent_id">
-                        <i class="material-icons left">add</i>
-                        Додати продукт
-                    </a>
                 </div>
             </div>
             <div class="row">
@@ -55,21 +53,23 @@
                                             <img v-if="image" :src="image">
                                             <img v-else src="/img/product_placeholder.png">
 
-                                            <router-link :to="{ name: 'product.edit', params: { id } }" class="btn-floating halfway-fab waves-effect waves-light blue edit" >
-                                                <i class="material-icons">edit</i>
+                                            <a class="btn-floating halfway-fab waves-effect waves-light blue edit" @click="addToCart( id, title )" v-if="items_on_stock"><i class="material-icons">add_shopping_cart</i></a>
+                                            <router-link :to="{ name: 'product.edit', params: { id } }" class="btn-floating halfway-fab waves-effect waves-light blue delete" >
+                                                <i class="material-icons">description</i>
                                             </router-link>
-                                            <a class="btn-floating halfway-fab waves-effect waves-light blue delete" @click="deleteProduct( id, title )"><i class="material-icons">delete</i></a>
+
                                         </div>
                                         <div class="card-content">
                                             <h6><b>{{title}}</b></h6>
                                             <div class="row short_description" v-html="short_description"></div>
-                                            <div class="row price">
+                                            <div class="row price" v-if="items_on_stock">
+                                                <div class="col s6"></div>
                                                 <div class="col s6">Ціна, грн</div>
-                                                <div class="col s6">Кількість</div>
                                             </div>
                                             <div class="row price">
-                                                <div class="col s6"><b>{{ price }}</b></div>
-                                                <div class="col s6"><b>{{ items_on_stock }}</b></div>
+                                                <div class="col s6"></div>
+                                                <div v-if="items_on_stock" class="col s6"><b>{{ price }}</b></div>
+                                                <div v-else class="col s6 red-text">Немає на складі</div>
                                             </div>
                                         </div>
                                     </div>
@@ -98,6 +98,8 @@
 
     import api from '../api/catalog';
 
+    console.log('~~~> data ProductCatalog.vue user_data: ~~~~', user_data);
+
     const getCatalog = (callback) => {
         axios
             .get('/api/catalog/products', {})
@@ -107,15 +109,14 @@
                 callback(error, error.response.data);
             });
     };
-
     const getProducts = (callback) => {
         axios
             .get('/api/products', {})
             .then(response => {
                 callback(null, response.data);
-            }).catch(error => {
-                callback(error, error.response.data);
-            });
+        }).catch(error => {
+            callback(error, error.response.data);
+        });
     };
 
 export default {
@@ -130,13 +131,25 @@ export default {
             };
         },
         mounted(){
+//console.log('~~~> MOUNTED ProductCatalog ~~~~', user_data);
             setTimeout(() => {
                 $("#general_loader").hide();
             }, 50);
         },
         updated(){
+//console.log('~~~> UPDATED ProductCatalog ~~~~', user_data);
                 var elem = document.querySelectorAll('.collapsible');
                 var instances = M.Collapsible.init(elem);
+
+//                if(!this.selectedCategoryRecord){
+//                    var el = $(".collapsible li.active").find(".collection-item").first();
+//console.log('~~~> FIRST ~~~~', el);
+//console.log('~~~> FIRST ~~~~', el.length);
+//                    if(el.length){
+//                        $(el).trigger('click');
+//console.log('~~~> trigger ~~~~');
+//                    }
+//                }
 
 //                var elems_btn = document.querySelectorAll('.fixed-action-btn');
 //                var instances_btn = M.FloatingActionButton.init(elems_btn, {direction:'right'});
@@ -146,36 +159,66 @@ export default {
                 next(vm => vm.setData(err, data));
             });
         },
-    beforeRouteUpdate (to, from, next) {
-        alert('beforeRouteUpdate');
-        getCatalog((err, data) => {
-            this.setData(err, data);
-            next();
-        });
-    },
-    methods: {
-        setData(err, { data: catalog_items }) {
-            if (err) {
-                this.error = err.toString();
-            } else {
-                this.catalog = catalog_items;
-                this.selectedCategoryRecord = null;
+        beforeRouteUpdate (to, from, next) {
+            alert('beforeRouteUpdate');
+            getCatalog((err, data) => {
+                this.setData(err, data);
+                next();
+            });
+        },
+        methods: {
+            count_products: function( category_item ){
+                return category_item.products.length;
+            },
+            addToCart(product_id, product_title){
+                if(!user_data){
+                    alert('Щоб додати продукт до кошика - авторизуйтесь.');
+                    document.location.href = '/login';
+                    return;
+                }
 
-//                if(typeof this.$route.params.catalog_id !== "undefined"){
-//                    let router_item = null;
-//                    let that = this;
-//                    $.each(catalog_items, function(v, parent_i){
-//                        $.each(parent_i.children, function(vv, ii){
-//                            if(ii.id == that.$route.params.catalog_id){
-//                                router_item = ii;
-//                            }
-//                        });
-//                    });
-//                    this.viewProductList(router_item)
-//                }
+
+            },
+            processSurvey(){
+
+            },
+            viewProductList(category_item){
+                this.loaded = false;
+                this.products = null;
+                this.selectedCategoryRecord = Vue.util.extend({}, category_item);
+
+                api.getCategoryProducts(category_item.id )
+                        .then((response) => {
+                    this.loaded = true;
+                let that = this;
+                if(typeof response.data.data.length !== 'undefined' && response.data.data.length == 0){
+                    this.products = null;
+                }else{
+                    $.each(response.data.data, function(cat_id, rows){
+                        that.products = rows;
+                    });
+                    }
+                });
+            },
+            setData(err, { data: catalog_items }) {
+                if (err) {
+                    this.error = err.toString();
+                } else {
+                    this.catalog = catalog_items;
+
+                    if( !this.selectedCategoryRecord ){
+                        let router_item = null;
+                        if(catalog_items.length){
+                            if(catalog_items[0].children.length){
+                                router_item = catalog_items[0].children[0];
+                                this.viewProductList(router_item)
+                            }
+                        }
+                    }
+
+                }
             }
         }
-    }
 }
 </script>
 <style>

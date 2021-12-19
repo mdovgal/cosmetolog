@@ -2320,6 +2320,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var $ = jquery__WEBPACK_IMPORTED_MODULE_4___default.a;
 
+console.log('~~~> data ProductCatalog.vue user_data: ~~~~', user_data);
 
 var getCatalog = function getCatalog(callback) {
   axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/api/catalog/products', {}).then(function (response) {
@@ -2349,13 +2350,24 @@ var getProducts = function getProducts(callback) {
     };
   },
   mounted: function mounted() {
+    //console.log('~~~> MOUNTED ProductCatalog ~~~~', user_data);
     setTimeout(function () {
       $("#general_loader").hide();
     }, 50);
   },
   updated: function updated() {
+    //console.log('~~~> UPDATED ProductCatalog ~~~~', user_data);
     var elem = document.querySelectorAll('.collapsible');
-    var instances = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Collapsible.init(elem); //                var elems_btn = document.querySelectorAll('.fixed-action-btn');
+    var instances = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Collapsible.init(elem); //                if(!this.selectedCategoryRecord){
+    //                    var el = $(".collapsible li.active").find(".collection-item").first();
+    //console.log('~~~> FIRST ~~~~', el);
+    //console.log('~~~> FIRST ~~~~', el.length);
+    //                    if(el.length){
+    //                        $(el).trigger('click');
+    //console.log('~~~> trigger ~~~~');
+    //                    }
+    //                }
+    //                var elems_btn = document.querySelectorAll('.fixed-action-btn');
     //                var instances_btn = M.FloatingActionButton.init(elems_btn, {direction:'right'});
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
@@ -2376,6 +2388,36 @@ var getProducts = function getProducts(callback) {
     });
   },
   methods: {
+    count_products: function count_products(category_item) {
+      return category_item.products.length;
+    },
+    addToCart: function addToCart(product_id, product_title) {
+      if (!user_data) {
+        alert('Щоб додати продукт до кошика - авторизуйтесь.');
+        document.location.href = '/login';
+        return;
+      }
+    },
+    processSurvey: function processSurvey() {},
+    viewProductList: function viewProductList(category_item) {
+      var _this2 = this;
+
+      this.loaded = false;
+      this.products = null;
+      this.selectedCategoryRecord = vue__WEBPACK_IMPORTED_MODULE_0___default.a.util.extend({}, category_item);
+      _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].getCategoryProducts(category_item.id).then(function (response) {
+        _this2.loaded = true;
+        var that = _this2;
+
+        if (typeof response.data.data.length !== 'undefined' && response.data.data.length == 0) {
+          _this2.products = null;
+        } else {
+          $.each(response.data.data, function (cat_id, rows) {
+            that.products = rows;
+          });
+        }
+      });
+    },
     setData: function setData(err, _ref) {
       var catalog_items = _ref.data;
 
@@ -2383,18 +2425,17 @@ var getProducts = function getProducts(callback) {
         this.error = err.toString();
       } else {
         this.catalog = catalog_items;
-        this.selectedCategoryRecord = null; //                if(typeof this.$route.params.catalog_id !== "undefined"){
-        //                    let router_item = null;
-        //                    let that = this;
-        //                    $.each(catalog_items, function(v, parent_i){
-        //                        $.each(parent_i.children, function(vv, ii){
-        //                            if(ii.id == that.$route.params.catalog_id){
-        //                                router_item = ii;
-        //                            }
-        //                        });
-        //                    });
-        //                    this.viewProductList(router_item)
-        //                }
+
+        if (!this.selectedCategoryRecord) {
+          var router_item = null;
+
+          if (catalog_items.length) {
+            if (catalog_items[0].children.length) {
+              router_item = catalog_items[0].children[0];
+              this.viewProductList(router_item);
+            }
+          }
+        }
       }
     }
   }
@@ -26927,7 +26968,23 @@ var render = function() {
       "div",
       { staticClass: "col s3", staticStyle: { "margin-top": "20px" } },
       [
-        _c("h5", [_vm._v("Каталог")]),
+        _c(
+          "a",
+          {
+            staticClass:
+              "waves-effect waves-light btn light-blue add_catalog_head",
+            staticStyle: { width: "100%" },
+            on: {
+              click: function($event) {
+                return _vm.processSurvey()
+              }
+            }
+          },
+          [
+            _c("i", { staticClass: "material-icons left" }, [_vm._v("apps")]),
+            _vm._v("\n                Підібрати догляд\n            ")
+          ]
+        ),
         _vm._v(" "),
         _c(
           "ul",
@@ -26948,33 +27005,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("span", { staticStyle: { width: "100%" } }, [
                         _vm._v(_vm._s(item.title))
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "i",
-                        {
-                          staticClass: "material-icons right md-24",
-                          on: {
-                            click: function($event) {
-                              return _vm.editCategory(item)
-                            }
-                          }
-                        },
-                        [_vm._v("edit")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "i",
-                        {
-                          staticClass: "material-icons right md-24",
-                          on: {
-                            click: function($event) {
-                              return _vm.deleteCategory(item)
-                            }
-                          }
-                        },
-                        [_vm._v("delete")]
-                      )
+                      ])
                     ]),
                     _vm._v(" "),
                     item.parent_id == 0
@@ -27000,35 +27031,30 @@ var render = function() {
                                         }
                                       }
                                     },
-                                    [_vm._v(_vm._s(sub_item.title))]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "i",
-                                    {
-                                      staticClass: "material-icons right md-18",
-                                      staticStyle: { cursor: "pointer" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.deleteCategory(sub_item)
-                                        }
-                                      }
-                                    },
-                                    [_vm._v("delete")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "i",
-                                    {
-                                      staticClass: "material-icons right md-18",
-                                      staticStyle: { cursor: "pointer" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.editCategory(sub_item)
-                                        }
-                                      }
-                                    },
-                                    [_vm._v("edit")]
+                                    [
+                                      _c(
+                                        "span",
+                                        {
+                                          staticClass:
+                                            "new badge blue light-blue indigo-text",
+                                          attrs: { "data-badge-caption": "" }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                        " +
+                                              _vm._s(
+                                                _vm.count_products(sub_item)
+                                              ) +
+                                              "\n                                    "
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(sub_item.title) +
+                                          "\n                                "
+                                      )
+                                    ]
                                   )
                                 ]
                               )
@@ -27056,11 +27082,9 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col s9" }, [
+              _c("div", { staticClass: "col s12" }, [
                 _c("h5", { staticStyle: { "margin-top": "0px" } }, [
-                  _vm._v(
-                    "Категорія: " + _vm._s(_vm.selectedCategoryRecord.title)
-                  )
+                  _vm._v(_vm._s(_vm.selectedCategoryRecord.title))
                 ]),
                 _vm._v(" "),
                 !_vm.loaded && _vm.catalog && !_vm.products
@@ -27068,38 +27092,7 @@ var render = function() {
                       _c("div", { staticClass: "indeterminate" })
                     ])
                   : _vm._e()
-              ]),
-              _vm._v(" "),
-              _vm.selectedCategoryRecord
-                ? _c("div", { staticClass: "col s3" }, [
-                    _vm.selectedCategoryRecord.parent_id
-                      ? _c(
-                          "a",
-                          {
-                            staticClass:
-                              "waves-effect waves-light btn light-blue add_catalog_head",
-                            staticStyle: { width: "100%" },
-                            attrs: { disabled: _vm.saving },
-                            on: {
-                              click: function($event) {
-                                return _vm.addProduct(
-                                  _vm.selectedCategoryRecord
-                                )
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "material-icons left" }, [
-                              _vm._v("add")
-                            ]),
-                            _vm._v(
-                              "\n                        Додати продукт\n                    "
-                            )
-                          ]
-                        )
-                      : _vm._e()
-                  ])
-                : _vm._e()
+              ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
@@ -27137,11 +27130,43 @@ var render = function() {
                                                 }
                                               }),
                                           _vm._v(" "),
+                                          items_on_stock
+                                            ? _c(
+                                                "a",
+                                                {
+                                                  staticClass:
+                                                    "btn-floating halfway-fab waves-effect waves-light blue edit",
+                                                  on: {
+                                                    click: function($event) {
+                                                      return _vm.addToCart(
+                                                        id,
+                                                        title
+                                                      )
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "i",
+                                                    {
+                                                      staticClass:
+                                                        "material-icons"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "add_shopping_cart"
+                                                      )
+                                                    ]
+                                                  )
+                                                ]
+                                              )
+                                            : _vm._e(),
+                                          _vm._v(" "),
                                           _c(
                                             "router-link",
                                             {
                                               staticClass:
-                                                "btn-floating halfway-fab waves-effect waves-light blue edit",
+                                                "btn-floating halfway-fab waves-effect waves-light blue delete",
                                               attrs: {
                                                 to: {
                                                   name: "product.edit",
@@ -27155,32 +27180,7 @@ var render = function() {
                                                 {
                                                   staticClass: "material-icons"
                                                 },
-                                                [_vm._v("edit")]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "a",
-                                            {
-                                              staticClass:
-                                                "btn-floating halfway-fab waves-effect waves-light blue delete",
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.deleteProduct(
-                                                    id,
-                                                    title
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c(
-                                                "i",
-                                                {
-                                                  staticClass: "material-icons"
-                                                },
-                                                [_vm._v("delete")]
+                                                [_vm._v("description")]
                                               )
                                             ]
                                           )
@@ -27206,33 +27206,50 @@ var render = function() {
                                             }
                                           }),
                                           _vm._v(" "),
-                                          _vm._m(0, true),
+                                          items_on_stock
+                                            ? _c(
+                                                "div",
+                                                { staticClass: "row price" },
+                                                [
+                                                  _c("div", {
+                                                    staticClass: "col s6"
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "div",
+                                                    { staticClass: "col s6" },
+                                                    [_vm._v("Ціна, грн")]
+                                                  )
+                                                ]
+                                              )
+                                            : _vm._e(),
                                           _vm._v(" "),
                                           _c(
                                             "div",
                                             { staticClass: "row price" },
                                             [
-                                              _c(
-                                                "div",
-                                                { staticClass: "col s6" },
-                                                [
-                                                  _c("b", [
-                                                    _vm._v(_vm._s(price))
-                                                  ])
-                                                ]
-                                              ),
+                                              _c("div", {
+                                                staticClass: "col s6"
+                                              }),
                                               _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                { staticClass: "col s6" },
-                                                [
-                                                  _c("b", [
-                                                    _vm._v(
-                                                      _vm._s(items_on_stock)
-                                                    )
-                                                  ])
-                                                ]
-                                              )
+                                              items_on_stock
+                                                ? _c(
+                                                    "div",
+                                                    { staticClass: "col s6" },
+                                                    [
+                                                      _c("b", [
+                                                        _vm._v(_vm._s(price))
+                                                      ])
+                                                    ]
+                                                  )
+                                                : _c(
+                                                    "div",
+                                                    {
+                                                      staticClass:
+                                                        "col s6 red-text"
+                                                    },
+                                                    [_vm._v("Немає на складі")]
+                                                  )
                                             ]
                                           )
                                         ]
@@ -27259,18 +27276,7 @@ var render = function() {
       : _vm._e()
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row price" }, [
-      _c("div", { staticClass: "col s6" }, [_vm._v("Ціна, грн")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col s6" }, [_vm._v("Кількість")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

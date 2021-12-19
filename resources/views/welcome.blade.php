@@ -32,21 +32,24 @@
                 <img src="/img/logo_blue.png" style="width:55px;padding-top:5px;"/>
             </a>
         @guest
-            <ul class="right hide-on-med-and-down">
-                <li><a href="{{ route('login') }}">Вхід - welcome</a></li>
+            <ul class="indigo-text text-darken-4 right hide-on-med-and-down">
+                <li><a class="indigo-text text-darken-4" href="{{ route('login') }}">Вхід</a></li>
                 @if (Route::has('register'))
                     <li>
-                        <a href="{{ route('register') }}">Зареєструватись - welcome</a>
+                        <a class="indigo-text text-darken-4" href="{{ route('register') }}">Зареєструватись</a>
                     </li>
                 @endif
             </ul>
         @else
           <ul class="right hide-on-med-and-down text-blue text-darken-4">
-            <li><a class="text-blue text-darken-4" href="{{ url('/admin') }}">Вітаємо, {{ Auth::user()->name }}! [{{ Auth::user()->role }}]</a></li>
+            <li><a class="indigo-text text-darken-4" href="{{ url('/admin') }}">Вітаємо, {{ Auth::user()->name }}!</a></li>
 
-            <li><a class="text-blue text-darken-4" href="{{ url('/') }}">Cart</a></li>
+            @if(Auth::user()->role == 'admin')
+            <li><a class="indigo-text text-darken-4" href="{{ url('/admin') }}">Адмінка</a></li>
+            @endif
+            <li><a class="indigo-text text-darken-4" href="{{ url('/') }}">Корзина</a></li>
 
-            <li><a class="text-blue text-darken-4" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <li><a class="indigo-text text-darken-4" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 Вихід
             </a></li>
           </ul>
@@ -65,8 +68,8 @@
       </main>
         <footer class="page-footer light-blue accent-1">
             <div class="footer-copyright">
-              <div class="container">
-              Made by <a class="text-blue text-darken-4" href="http://materializecss.com">Materialize</a>
+              <div class="container indigo-text">
+              Made by <a class="text-blue text-darken-4" href="https://www.instagram.com/vodya._.vodya/">DovIra</a>
               </div>
             </div>
           </footer>
@@ -91,6 +94,10 @@ main.container {
         background-color: #90caf9 !important;
     }
 </style>
+<script>
+
+var user_data = @json(Auth::user());
+</script>
 <script src="{{ mix('js/app.js') }}"></script>
     </body>
 </html>
