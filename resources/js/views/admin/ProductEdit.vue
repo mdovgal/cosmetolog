@@ -234,6 +234,10 @@
         },
         mounted(){
             //M.toast({html: 'M::MOUNTED!'});
+            this.is_updated = false;
+
+            var elems_select = document.querySelectorAll('select');
+            var instances_select = M.FormSelect.init(elems_select, {});
 
             setTimeout(() => {
                 $("menu a").each(function(){
@@ -244,6 +248,8 @@
 
                 $("#general_loader").hide();
             }, 50);
+
+
         },
         updated(){
             if(!this.is_updated) {
