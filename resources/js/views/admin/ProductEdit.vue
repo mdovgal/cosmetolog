@@ -46,7 +46,7 @@
                             <select id="category_id" name="category_id" class="validate" v-model="product.category_id">
                                 <optgroup v-for="item in catalog" :label="item.title" :key="item.id">
                                     <option v-for="sub_item in item.children" :value="sub_item.id" :selected="sub_item.id == $route.params.catalog_id">
-                                        {{sub_item.title}} :: {{sub_item.id}}
+                                        {{sub_item.title}}
                                     </option>
                                 </optgroup>
                             </select>
@@ -57,7 +57,7 @@
                             <select id="type_id" name="type_id" class="validate" v-model="product.type_id">
                                 <option value=""></option>
                                 <option v-for="item in product_types" :value="item.id">
-                                    {{item.type_title}} :: {{item.id}}
+                                    {{item.type_title}}
                                 </option>
                             </select>
                             <label for="type_id">Тип продукту</label>
@@ -126,7 +126,7 @@
                             <div class="col s3" v-for="(checbox_item, index) in item">
                                 <label>
                                     <input type="checkbox" :value="checbox_item.id"  v-model="product.attributes"/>
-                                    <span>{{checbox_item.title}} :: {{ checbox_item.id }}</span>
+                                    <span>{{checbox_item.title}} </span>
                                 </label>
                             </div>
                         </div>
@@ -144,7 +144,7 @@
                             <div class="col s3" v-for="{id, title} in item">
                                 <label>
                                     <input type="checkbox" :value="id"  v-model="product.attributes"/>
-                                    <span>{{title}} :: {{ id }}</span>
+                                    <span>{{title}}</span>
                                 </label>
                             </div>
                         </div>
