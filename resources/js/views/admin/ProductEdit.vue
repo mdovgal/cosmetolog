@@ -233,7 +233,7 @@
             };
         },
         mounted(){
-            //M.toast({html: 'M::MOUNTED!'});
+            M.toast({html: 'M::MOUNTED!'});
             this.is_updated = false;
 
             var elems_select = document.querySelectorAll('select');
@@ -252,8 +252,9 @@
 
         },
         updated(){
+console.log('~~> this.is_updated', this.is_updated);
             if(!this.is_updated) {
-                //M.toast({html: 'M::UPDATED!'});
+                M.toast({html: 'M::UPDATED!'});
                 M.updateTextFields();
                 var elems_select = document.querySelectorAll('select');
                 var instances_select = M.FormSelect.init(elems_select, {});
@@ -313,6 +314,11 @@
                             $.each(v, function(pp, vv){
                                 if(pp == 'catalog'){
                                     that.catalog = vv;
+
+
+                                    var elems_select = document.querySelectorAll('select');
+                                    var instances_select = M.FormSelect.init(elems_select, {});
+                                    M.toast({html: 'M::SELECT UPDATED!!!'});
                                 }
                                 if(pp == 'types'){
                                     that.product_types = vv;
@@ -324,7 +330,7 @@
                                     that.product_attributes = vv;
                                 }
                                 if(pp == 'attributes_selected'){
-                                    console.log('attributes_selected',vv );
+//console.log('attributes_selected',vv );
                                     $.each(vv, function(idx,sel){
                                         that.attributes_selected.push( sel.attribute_id );
                                         that.product.attributes.push( sel.attribute_id );
