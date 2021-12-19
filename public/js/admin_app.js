@@ -3746,9 +3746,7 @@ var getProductParams = function getProductParams(callback) {
     };
   },
   mounted: function mounted() {
-    materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-      html: 'M::MOUNTED!'
-    });
+    //            M.toast({html: 'M::MOUNTED!'});
     this.is_updated = false;
     var elems_select = document.querySelectorAll('select');
     var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select, {});
@@ -3762,12 +3760,8 @@ var getProductParams = function getProductParams(callback) {
     }, 50);
   },
   updated: function updated() {
-    console.log('~~> this.is_updated', this.is_updated);
-
     if (!this.is_updated) {
-      materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-        html: 'M::UPDATED!'
-      });
+      //                M.toast({html: 'M::UPDATED!'});
       materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.updateTextFields();
       var elems_tab = document.querySelectorAll('.tabs');
       var instance_tab = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Tabs.init(elems_tab, {
@@ -3817,9 +3811,6 @@ var getProductParams = function getProductParams(callback) {
       //                $("input[type='checkbox'][value='" + v + "']").prop('checked', true);
       //            });
     }
-
-    var elems_select = document.querySelectorAll('select');
-    var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select, {});
   },
   created: function created() {
     var _this = this;
@@ -3836,9 +3827,6 @@ var getProductParams = function getProductParams(callback) {
             setTimeout(function () {
               var elems_select = document.querySelectorAll('select');
               var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select, {});
-              materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
-                html: 'M::SELECT UPDATED in setTimeout!!!'
-              });
             }, 50);
           }
 

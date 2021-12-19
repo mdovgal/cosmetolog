@@ -233,7 +233,7 @@
             };
         },
         mounted(){
-            M.toast({html: 'M::MOUNTED!'});
+//            M.toast({html: 'M::MOUNTED!'});
             this.is_updated = false;
 
             var elems_select = document.querySelectorAll('select');
@@ -252,9 +252,8 @@
 
         },
         updated(){
-console.log('~~> this.is_updated', this.is_updated);
             if(!this.is_updated) {
-                M.toast({html: 'M::UPDATED!'});
+//                M.toast({html: 'M::UPDATED!'});
                 M.updateTextFields();
 
                 var elems_tab = document.querySelectorAll('.tabs');
@@ -299,9 +298,6 @@ console.log('~~> this.is_updated', this.is_updated);
     //                $("input[type='checkbox'][value='" + v + "']").prop('checked', true);
     //            });
             }
-
-            var elems_select = document.querySelectorAll('select');
-            var instances_select = M.FormSelect.init(elems_select, {});
         },
         created(){
             this.is_updated = false;
@@ -319,7 +315,6 @@ console.log('~~> this.is_updated', this.is_updated);
                                     setTimeout(() => {
                                         var elems_select = document.querySelectorAll('select');
                                         var instances_select = M.FormSelect.init(elems_select, {});
-M.toast({html: 'M::SELECT UPDATED in setTimeout!!!'});
                                     }, 50);
 
                                 }
