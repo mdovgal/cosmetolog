@@ -9,6 +9,7 @@ todo
 - Веб-фреймворк - Laravel
 - ОРМ - Eloquent
 - UI-фреймворк - Vuejs
+- CSS-фреймворк - Materialize
 - Хмарний хостінг - Heroku
 
 ## Деталі реалізації
@@ -33,7 +34,7 @@ php artisan migrate
 php artisan db:seed
 ```
 ## Посилання на розгорнуту систему
-Система на Heroku доступна за [посиланням](http://kursovik-cosmetics.herokuapp.com/)
+Система на Heroku доступна за [http://kursovik-cosmetics.herokuapp.com/](http://kursovik-cosmetics.herokuapp.com/)
 
 ## Логічна модель даних
 ![Логічна](http://kursovik-cosmetics.herokuapp.com/img/Logic_model.jpg)
