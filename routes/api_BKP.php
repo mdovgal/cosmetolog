@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::namespace('Api')->group(function () {
-// Generals routes
+// generals
     Route::get('/product_params', 'ProductController@params');
     Route::get('/product_params/{product_id}', 'ProductController@params');
     Route::get('/product_view_params/{product_id}', 'ProductController@params_view');
@@ -47,5 +47,11 @@ Route::namespace('Api')->group(function () {
     Route::put('/users/{user}', 'UsersController@update');
     Route::delete('/users/{user}', 'UsersController@destroy');
 
+
+// old routers
+    Route::get('/category', 'CategoryController@index');
+
+    Route::get('/article/user/{user}', 'ArticleController@index');
+    Route::post('/article', 'ArticleController@save');
 
 });
