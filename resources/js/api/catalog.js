@@ -11,5 +11,15 @@ export default {
     },
     getCategoryProducts( category_id ) {
         return axios.get(`/api/products/category/${category_id}`);
+    },
+// API for Cart
+    getUserCart( user_id ) {
+        return axios.get(`/api/cart/${user_id}`);
+    },
+    createCart( user_id ) {
+        return axios.post(`/api/cart/${user_id}`);
+    },
+    saveItemToCart( cart_id, product_id, quantity ) {
+        return axios.post(`/api/cart/${cart_id}/add_product/${product_id}/quantity/${quantity}`);
     }
 };

@@ -43,7 +43,7 @@
                             <input id="price" type="text" class="validate black-text" v-model="product.price" readonly>
                             <label for="price">Ціна, грн</label>
                         </div>
-                        <div class="row center-align">
+                        <div class="row center-align" v-if="product.items_on_stock">
                             <div class="input-field col s2">
                                 <input type="number" id="items" min="0" :max="product.items_on_stock" v-model="product.items">
                                 <label for="items">Кількість</label>

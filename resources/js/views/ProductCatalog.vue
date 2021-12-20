@@ -53,7 +53,10 @@
                                             <img v-if="image" :src="image">
                                             <img v-else src="/img/product_placeholder.png">
 
-                                            <a class="btn-floating halfway-fab waves-effect waves-light blue edit" @click="addToCart( id, title )" v-if="items_on_stock"><i class="material-icons">add_shopping_cart</i></a>
+                                            <a class="btn-floating halfway-fab waves-effect waves-light blue edit" @click="addToCart( id, title )" v-if="items_on_stock" :disabled="saving">
+                                                <i class="material-icons">add_shopping_cart</i>
+                                            </a>
+
                                             <router-link :to="{ name: 'product.view', params: { id } }" class="btn-floating halfway-fab waves-effect waves-light blue delete" >
                                                 <i class="material-icons">description</i>
                                             </router-link>
@@ -64,7 +67,7 @@
                                             <div class="row short_description" v-html="short_description"></div>
                                             <div class="row price" v-if="items_on_stock">
                                                 <div class="col s6"></div>
-                                                <div class="col s6">Ціна, грн</div>
+                                                <div class="col s6">Ціна, грн :: {{ items_on_stock }}</div>
                                             </div>
                                             <div class="row price">
                                                 <div class="col s6"></div>
@@ -109,6 +112,18 @@
                 callback(error, error.response.data);
             });
     };
+    const getCart = (callback) => {
+console.log('~~~> user_data in getCart: ~~~~', user_data);
+        var user_id = user_data.id;
+
+        axios
+            .get(`/api/cart/${user_id}`, {})
+            .then(response => {
+                callback(null, response.data);
+            }).catch(error => {
+                callback(error, error.response);
+            });
+    };
     const getProducts = (callback) => {
         axios
             .get('/api/products', {})
@@ -124,10 +139,13 @@ export default {
             return {
                 message: null,
                 loaded: true,
+                saving: false,
                 catalog: null,
                 error: null,
                 error_message: null,
-                selectedCategoryRecord: null
+                selectedCategoryRecord: null,
+                selectedCategoryItem: null,
+                cart: null
             };
         },
         mounted(){
@@ -136,23 +154,26 @@ export default {
                 $("#general_loader").hide();
             }, 50);
         },
+        created(){
+            if(user_data){
+                var user_id = user_data.id;
+                var that = this;
+                api.getUserCart(user_id )
+                    .then((response) => {
+                        if(response.data.data.length){
+                            that.cart = response.data.data[0];
+
+                            var cart_palcement = $("#user_cart_container");
+                            cart_palcement.html('Кошик ['+ that.cart.cart_items.length +']');
+                        }else{
+                            that.cart = null;
+                        }
+                    });
+            }
+        },
         updated(){
-//console.log('~~~> UPDATED ProductCatalog ~~~~', user_data);
                 var elem = document.querySelectorAll('.collapsible');
                 var instances = M.Collapsible.init(elem);
-
-//                if(!this.selectedCategoryRecord){
-//                    var el = $(".collapsible li.active").find(".collection-item").first();
-//console.log('~~~> FIRST ~~~~', el);
-//console.log('~~~> FIRST ~~~~', el.length);
-//                    if(el.length){
-//                        $(el).trigger('click');
-//console.log('~~~> trigger ~~~~');
-//                    }
-//                }
-
-//                var elems_btn = document.querySelectorAll('.fixed-action-btn');
-//                var instances_btn = M.FloatingActionButton.init(elems_btn, {direction:'right'});
         },
         beforeRouteEnter (to, from, next){
             getCatalog( (err, data) => {
@@ -160,11 +181,6 @@ export default {
             });
         },
         beforeRouteUpdate (to, from, next) {
-            alert('beforeRouteUpdate');
-            getCatalog((err, data) => {
-                this.setData(err, data);
-                next();
-            });
         },
         methods: {
             count_products: function( category_item ){
@@ -177,7 +193,39 @@ export default {
                     return;
                 }
 
+                this.saving = true;
 
+//console.log('~~> BEFORE SAVE ITEM', this.cart);
+                if(!this.cart || !this.cart.id){
+console.log('~~> CREATE CART');
+                    api.createCart(user_data.id)
+                        .then((response) => {
+                            this.cart = response.data.data[0];
+
+                            var cart_palcement = $("#user_cart_container");
+                            cart_palcement.html('Кошик ['+ this.cart.cart_items.length +']');
+
+                            this.addToCart(product_id, product_title);
+                        });
+                }else{
+                    api.saveItemToCart( this.cart.id, product_id, 1 )
+                        .then((response) => {
+                            this.cart = response.data.data[0];
+console.log('~~~> CART after saveItemToCart', this.cart);
+
+                            var cart_palcement = $("#user_cart_container");
+                            cart_palcement.html('Кошик ['+ this.cart.cart_items.length +']');
+
+                            M.toast({html: 'Продукт додано до кошика'});
+                            this.saving = false;
+
+                            this.viewProductList(this.selectedCategoryItem);
+                        }).catch((err) => {
+                            alert(err.response.data.message);
+                            this.saving = false;
+                            this.viewProductList(this.selectedCategoryItem);
+                        });
+                }
             },
             processSurvey(){
 
@@ -186,19 +234,27 @@ export default {
                 this.loaded = false;
                 this.products = null;
                 this.selectedCategoryRecord = Vue.util.extend({}, category_item);
+                this.selectedCategoryItem = category_item;
 
                 api.getCategoryProducts(category_item.id )
-                        .then((response) => {
-                    this.loaded = true;
-                let that = this;
-                if(typeof response.data.data.length !== 'undefined' && response.data.data.length == 0){
-                    this.products = null;
-                }else{
-                    $.each(response.data.data, function(cat_id, rows){
-                        that.products = rows;
+                    .then((response) => {
+                        this.loaded = true;
+                        let that = this;
+                        if(typeof response.data.data.length !== 'undefined' && response.data.data.length == 0){
+                            this.products = null;
+                        }else{
+                            $.each(response.data.data, function(cat_id, rows){
+                                that.products = rows;
+                            });
+                        }
                     });
-                    }
-                });
+            },
+            setCartData(err, { data }) {
+                if (err) {
+                    this.error = err.toString();
+                } else {
+                    this.cart = cart;
+                }
             },
             setData(err, { data: catalog_items }) {
                 if (err) {
@@ -211,6 +267,7 @@ export default {
                         if(catalog_items.length){
                             if(catalog_items[0].children.length){
                                 router_item = catalog_items[0].children[0];
+                                this.selectedCategoryItem = router_item;
                                 this.viewProductList(router_item)
                             }
                         }

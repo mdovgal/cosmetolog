@@ -18,6 +18,8 @@ const router = new VueRouter({
         },
         {path: '/products/category/:catalog_id', name: 'products.catalog',component: ProductCatalog
         },
+        {path: '/cart', name: 'products.catalog',component: ProductCatalog
+        },
         { path: '/404', name: '404', component: NotFound },
     ],
 });

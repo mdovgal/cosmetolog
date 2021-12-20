@@ -47,7 +47,7 @@
             @if(Auth::user()->role == 'admin')
             <li><a class="indigo-text text-darken-4" href="{{ url('/admin') }}">Адмінка</a></li>
             @endif
-            <li><a class="indigo-text text-darken-4" href="{{ url('/') }}">Корзина</a></li>
+            <li><a class="indigo-text text-darken-4" href="{{ url('/') }}" id="user_cart_container">Кошик</a></li>
 
             <li><a class="indigo-text text-darken-4" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 Вихід

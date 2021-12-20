@@ -2313,6 +2313,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2330,6 +2333,16 @@ var getCatalog = function getCatalog(callback) {
   });
 };
 
+var getCart = function getCart(callback) {
+  console.log('~~~> user_data in getCart: ~~~~', user_data);
+  var user_id = user_data.id;
+  axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/api/cart/".concat(user_id), {}).then(function (response) {
+    callback(null, response.data);
+  })["catch"](function (error) {
+    callback(error, error.response);
+  });
+};
+
 var getProducts = function getProducts(callback) {
   axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/api/products', {}).then(function (response) {
     callback(null, response.data);
@@ -2343,10 +2356,13 @@ var getProducts = function getProducts(callback) {
     return {
       message: null,
       loaded: true,
+      saving: false,
       catalog: null,
       error: null,
       error_message: null,
-      selectedCategoryRecord: null
+      selectedCategoryRecord: null,
+      selectedCategoryItem: null,
+      cart: null
     };
   },
   mounted: function mounted() {
@@ -2355,20 +2371,24 @@ var getProducts = function getProducts(callback) {
       $("#general_loader").hide();
     }, 50);
   },
+  created: function created() {
+    if (user_data) {
+      var user_id = user_data.id;
+      var that = this;
+      _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].getUserCart(user_id).then(function (response) {
+        if (response.data.data.length) {
+          that.cart = response.data.data[0];
+          var cart_palcement = $("#user_cart_container");
+          cart_palcement.html('Кошик [' + that.cart.cart_items.length + ']');
+        } else {
+          that.cart = null;
+        }
+      });
+    }
+  },
   updated: function updated() {
-    //console.log('~~~> UPDATED ProductCatalog ~~~~', user_data);
     var elem = document.querySelectorAll('.collapsible');
-    var instances = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Collapsible.init(elem); //                if(!this.selectedCategoryRecord){
-    //                    var el = $(".collapsible li.active").find(".collection-item").first();
-    //console.log('~~~> FIRST ~~~~', el);
-    //console.log('~~~> FIRST ~~~~', el.length);
-    //                    if(el.length){
-    //                        $(el).trigger('click');
-    //console.log('~~~> trigger ~~~~');
-    //                    }
-    //                }
-    //                var elems_btn = document.querySelectorAll('.fixed-action-btn');
-    //                var instances_btn = M.FloatingActionButton.init(elems_btn, {direction:'right'});
+    var instances = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Collapsible.init(elem);
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     getCatalog(function (err, data) {
@@ -2377,25 +2397,49 @@ var getProducts = function getProducts(callback) {
       });
     });
   },
-  beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
-    var _this = this;
-
-    alert('beforeRouteUpdate');
-    getCatalog(function (err, data) {
-      _this.setData(err, data);
-
-      next();
-    });
-  },
+  beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {},
   methods: {
     count_products: function count_products(category_item) {
       return category_item.products.length;
     },
     addToCart: function addToCart(product_id, product_title) {
+      var _this = this;
+
       if (!user_data) {
         alert('Щоб додати продукт до кошика - авторизуйтесь.');
         document.location.href = '/login';
         return;
+      }
+
+      this.saving = true; //console.log('~~> BEFORE SAVE ITEM', this.cart);
+
+      if (!this.cart || !this.cart.id) {
+        console.log('~~> CREATE CART');
+        _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].createCart(user_data.id).then(function (response) {
+          _this.cart = response.data.data[0];
+          var cart_palcement = $("#user_cart_container");
+          cart_palcement.html('Кошик [' + _this.cart.cart_items.length + ']');
+
+          _this.addToCart(product_id, product_title);
+        });
+      } else {
+        _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].saveItemToCart(this.cart.id, product_id, 1).then(function (response) {
+          _this.cart = response.data.data[0];
+          console.log('~~~> CART after saveItemToCart', _this.cart);
+          var cart_palcement = $("#user_cart_container");
+          cart_palcement.html('Кошик [' + _this.cart.cart_items.length + ']');
+          materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
+            html: 'Продукт додано до кошика'
+          });
+          _this.saving = false;
+
+          _this.viewProductList(_this.selectedCategoryItem);
+        })["catch"](function (err) {
+          alert(err.response.data.message);
+          _this.saving = false;
+
+          _this.viewProductList(_this.selectedCategoryItem);
+        });
       }
     },
     processSurvey: function processSurvey() {},
@@ -2405,6 +2449,7 @@ var getProducts = function getProducts(callback) {
       this.loaded = false;
       this.products = null;
       this.selectedCategoryRecord = vue__WEBPACK_IMPORTED_MODULE_0___default.a.util.extend({}, category_item);
+      this.selectedCategoryItem = category_item;
       _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].getCategoryProducts(category_item.id).then(function (response) {
         _this2.loaded = true;
         var that = _this2;
@@ -2418,8 +2463,17 @@ var getProducts = function getProducts(callback) {
         }
       });
     },
-    setData: function setData(err, _ref) {
-      var catalog_items = _ref.data;
+    setCartData: function setCartData(err, _ref) {
+      var data = _ref.data;
+
+      if (err) {
+        this.error = err.toString();
+      } else {
+        this.cart = cart;
+      }
+    },
+    setData: function setData(err, _ref2) {
+      var catalog_items = _ref2.data;
 
       if (err) {
         this.error = err.toString();
@@ -2432,6 +2486,7 @@ var getProducts = function getProducts(callback) {
           if (catalog_items.length) {
             if (catalog_items[0].children.length) {
               router_item = catalog_items[0].children[0];
+              this.selectedCategoryItem = router_item;
               this.viewProductList(router_item);
             }
           }
@@ -27449,6 +27504,9 @@ var render = function() {
                                                 {
                                                   staticClass:
                                                     "btn-floating halfway-fab waves-effect waves-light blue edit",
+                                                  attrs: {
+                                                    disabled: _vm.saving
+                                                  },
                                                   on: {
                                                     click: function($event) {
                                                       return _vm.addToCart(
@@ -27531,7 +27589,12 @@ var render = function() {
                                                   _c(
                                                     "div",
                                                     { staticClass: "col s6" },
-                                                    [_vm._v("Ціна, грн")]
+                                                    [
+                                                      _vm._v(
+                                                        "Ціна, грн :: " +
+                                                          _vm._s(items_on_stock)
+                                                      )
+                                                    ]
                                                   )
                                                 ]
                                               )
@@ -27774,61 +27837,67 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "row center-align" }, [
-                  _c("div", { staticClass: "input-field col s2" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.product.items,
-                          expression: "product.items"
-                        }
-                      ],
-                      attrs: {
-                        type: "number",
-                        id: "items",
-                        min: "0",
-                        max: _vm.product.items_on_stock
-                      },
-                      domProps: { value: _vm.product.items },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+                _vm.product.items_on_stock
+                  ? _c("div", { staticClass: "row center-align" }, [
+                      _c("div", { staticClass: "input-field col s2" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.product.items,
+                              expression: "product.items"
+                            }
+                          ],
+                          attrs: {
+                            type: "number",
+                            id: "items",
+                            min: "0",
+                            max: _vm.product.items_on_stock
+                          },
+                          domProps: { value: _vm.product.items },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.product,
+                                "items",
+                                $event.target.value
+                              )
+                            }
                           }
-                          _vm.$set(_vm.product, "items", $event.target.value)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("label", { attrs: { for: "items" } }, [
-                      _vm._v("Кількість")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "input-field col s3" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "waves-effect waves-light btn blue",
-                        on: {
-                          click: function($event) {
-                            return _vm.sentToCart(_vm.product)
-                          }
-                        }
-                      },
-                      [
-                        _c("i", { staticClass: "material-icons" }, [
-                          _vm._v("add_shopping_cart")
-                        ]),
-                        _vm._v(
-                          "\n                                До кошика\n                            "
+                        }),
+                        _vm._v(" "),
+                        _c("label", { attrs: { for: "items" } }, [
+                          _vm._v("Кількість")
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-field col s3" }, [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "waves-effect waves-light btn blue",
+                            on: {
+                              click: function($event) {
+                                return _vm.sentToCart(_vm.product)
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "material-icons" }, [
+                              _vm._v("add_shopping_cart")
+                            ]),
+                            _vm._v(
+                              "\n                                До кошика\n                            "
+                            )
+                          ]
                         )
-                      ]
-                    )
-                  ])
-                ])
+                      ])
+                    ])
+                  : _vm._e()
               ])
             ])
           ])
@@ -43225,6 +43294,16 @@ __webpack_require__.r(__webpack_exports__);
   },
   getCategoryProducts: function getCategoryProducts(category_id) {
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/products/category/".concat(category_id));
+  },
+  // API for Cart
+  getUserCart: function getUserCart(user_id) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/cart/".concat(user_id));
+  },
+  createCart: function createCart(user_id) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/cart/".concat(user_id));
+  },
+  saveItemToCart: function saveItemToCart(cart_id, product_id, quantity) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/cart/".concat(cart_id, "/add_product/").concat(product_id, "/quantity/").concat(quantity));
   }
 });
 
@@ -43266,6 +43345,10 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     component: _views_ProductView__WEBPACK_IMPORTED_MODULE_4__["default"]
   }, {
     path: '/products/category/:catalog_id',
+    name: 'products.catalog',
+    component: _views_ProductCatalog__WEBPACK_IMPORTED_MODULE_3__["default"]
+  }, {
+    path: '/cart',
     name: 'products.catalog',
     component: _views_ProductCatalog__WEBPACK_IMPORTED_MODULE_3__["default"]
   }, {
