@@ -67,7 +67,7 @@
                                             <div class="row short_description" v-html="short_description"></div>
                                             <div class="row price" v-if="items_on_stock">
                                                 <div class="col s6"></div>
-                                                <div class="col s6">Ціна, грн :: {{ items_on_stock }}</div>
+                                                <div class="col s6">Ціна, грн</div>
                                             </div>
                                             <div class="row price">
                                                 <div class="col s6"></div>
