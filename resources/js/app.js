@@ -14,6 +14,10 @@ const router = new VueRouter({
     routes: [
         {path: '/', name: 'product.catalog',component: ProductCatalog
         },
+        {path: '/product/:id/', name: 'product.view',component: ProductView
+        },
+        {path: '/products/category/:catalog_id', name: 'products.catalog',component: ProductCatalog
+        },
         { path: '/404', name: '404', component: NotFound },
     ],
 });

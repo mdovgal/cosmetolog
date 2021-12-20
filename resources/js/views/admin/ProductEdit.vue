@@ -24,7 +24,7 @@
                             <label for="imagefile" style="cursor: pointer;">
                                 <div class="card">
                                     <div class="card-image" v-if="product.image">
-                                        <img :src="product.image">
+                                        <img :src="product.image" style="margin: auto;height: auto;width: auto; max-width:444px; max-height:444px;">
                                     </div>
                                     <div class="card-image" v-else>
                                         <img src="/img/product_placeholder.png">
@@ -298,6 +298,9 @@
     //                $("input[type='checkbox'][value='" + v + "']").prop('checked', true);
     //            });
             }
+
+            var elems_select = document.querySelectorAll('select');
+            var instances_select = M.FormSelect.init(elems_select, {});
         },
         created(){
             this.is_updated = false;

@@ -22,6 +22,7 @@ Route::namespace('Api')->group(function () {
 // generals
     Route::get('/product_params', 'ProductController@params');
     Route::get('/product_params/{product_id}', 'ProductController@params');
+    Route::get('/product_view_params/{product_id}', 'ProductController@params_view');
 
     Route::get('/catalog/products', 'CatalogController@allcatalog');
 

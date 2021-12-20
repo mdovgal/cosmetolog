@@ -250,6 +250,25 @@ class ProductController extends Controller
 
     }
 
+    public function params_view( $product_id = null)
+    {
+        $product_data = Product::where('id', $product_id)->get()->toArray();
+        $product = $product_data[0];
+
+        $category = Catalog::where('id', $product['category_id'])->get()->toArray();
+        $type = ProductTypes::where('id', $product['type_id'])->get()->toArray();
+        $brend = Brands::where('id', $product['brand_id'])->get()->toArray();
+
+        $all_collections = collect([
+            'data' => [
+                ['catalog' => $category[0]['title']],
+                ['types' => $type[0]['type_title']],
+                ['brends' => $brend[0]['brand_title'] . ' (' . $brend[0]['country_title'] . ')'],
+            ]]);
+        return $all_collections;
+
+    }
+
     public function buildCategoryTree($items)
     {
         $grouped = $items->groupBy('parent_id');

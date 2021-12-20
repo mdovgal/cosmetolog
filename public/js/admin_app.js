@@ -3811,6 +3811,9 @@ var getProductParams = function getProductParams(callback) {
       //                $("input[type='checkbox'][value='" + v + "']").prop('checked', true);
       //            });
     }
+
+    var elems_select = document.querySelectorAll('select');
+    var instances_select = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.FormSelect.init(elems_select, {});
   },
   created: function created() {
     var _this = this;
@@ -30408,7 +30411,16 @@ var render = function() {
                       _c("div", { staticClass: "card" }, [
                         _vm.product.image
                           ? _c("div", { staticClass: "card-image" }, [
-                              _c("img", { attrs: { src: _vm.product.image } })
+                              _c("img", {
+                                staticStyle: {
+                                  margin: "auto",
+                                  height: "auto",
+                                  width: "auto",
+                                  "max-width": "444px",
+                                  "max-height": "444px"
+                                },
+                                attrs: { src: _vm.product.image }
+                              })
                             ])
                           : _c("div", { staticClass: "card-image" }, [
                               _c("img", {
@@ -31317,6 +31329,13 @@ var render = function() {
                             _vm.product.image
                               ? _c("div", { staticClass: "card-image" }, [
                                   _c("img", {
+                                    staticStyle: {
+                                      margin: "auto",
+                                      height: "auto",
+                                      width: "auto",
+                                      "max-width": "444px",
+                                      "max-height": "444px"
+                                    },
                                     attrs: { src: _vm.product.image }
                                   })
                                 ])
