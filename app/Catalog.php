@@ -38,6 +38,6 @@ class Catalog extends Model
 
     public function products()
     {
-        return $this->hasMany('App\Product', 'category_id');
+        return $this->hasMany('App\ProductView', 'category_id');
     }
 }

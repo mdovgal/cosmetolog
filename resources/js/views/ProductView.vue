@@ -49,7 +49,7 @@
                                 <label for="items">Кількість</label>
                             </div>
                             <div class="input-field col s3">
-                                <a class="waves-effect waves-light btn blue" @click="sentToCart(product)">
+                                <a class="waves-effect waves-light btn blue" @click="addToCart(product)" :disabled="saving">
                                     <i class="material-icons">add_shopping_cart</i>
                                     До кошика
                                 </a>
@@ -139,7 +139,8 @@
                     items_on_stock: "",
                     attachment: null,
                     items: 0,
-                    attributes: []
+                    attributes: [],
+                    cart: null
                 }
             };
         },
@@ -224,6 +225,22 @@
                 });
 
 
+                if(user_data){
+                    var user_id = user_data.id;
+                    var that = this;
+                    api.getUserCart(user_id )
+                            .then((response) => {
+                        if(response.data.data.length){
+                        that.cart = response.data.data[0];
+
+                        var cart_palcement = $("#user_cart_container");
+                        cart_palcement.html('Кошик ['+ that.cart.cart_items.length +']');
+                    }else{
+                        that.cart = null;
+                    }
+                });
+    }
+
         },
 //        beforeRouteEnter (to, from, next){
 //            getProductParams( (err, data) => {
@@ -231,8 +248,51 @@
 //            });
 //        },
         methods: {
-            sentToCart(item){
+            addToCart(product){
+                if(!user_data){
+                    alert('Щоб додати продукт до кошика - авторизуйтесь.');
+                    document.location.href = '/login';
+                    return;
+                }
+                if(product.items > product.items_on_stock){
+                    alert('В наявності тільки '+ product.items_on_stock + ' шт продукту');
+                    return;
+                }
+                if(!product.items || product.items == 0 || product.items == ''){
+                    alert('Вкажіть кількість продукту');
+                    return;
+                }
 
+                this.saving = true;
+
+                if(!this.cart || !this.cart.id){
+                    api.createCart(user_data.id)
+                        .then((response) => {
+                            this.cart = response.data.data[0];
+
+                            var cart_palcement = $("#user_cart_container");
+                            cart_palcement.html('Кошик ['+ this.cart.cart_items.length +']');
+
+                            this.addToCart(product);
+                        });
+                }else{
+                    api.saveItemToCart( this.cart.id, product.id, product.items )
+                        .then((response) => {
+                            this.cart = response.data.data[0];
+
+                            var cart_palcement = $("#user_cart_container");
+                            cart_palcement.html('Кошик ['+ this.cart.cart_items.length +']');
+
+                            M.toast({html: 'Продукт додано до кошика'});
+                            this.saving = false;
+                            this.product.items_on_stock = this.product.items_on_stock - product.items;
+                            this.product.items = null;
+
+                        }).catch((err) => {
+                            alert(err.response.data.message);
+                            this.saving = false;
+                        });
+                }
             },
             returnToCategory(){
                 this.loaded = false;

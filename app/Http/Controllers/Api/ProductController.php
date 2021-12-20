@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Session;
 
 use App\Catalog;
 use App\Product;
+use App\ProductView;
 use App\ProductTypes;
 use App\Brands;
 use App\Attributes;
@@ -23,7 +24,7 @@ class ProductController extends Controller
 {
     public function index( $category_id )
     {
-        $productsItems = Product::where('category_id', $category_id)
+        $productsItems = ProductView::where('category_id', $category_id)
             ->orderBy('title', 'asc')
             ->paginate(12)
             //->get()
@@ -44,7 +45,7 @@ class ProductController extends Controller
     public function find( $product_id )
     {
         return ProductResource::collection(
-            Product::where('id', $product_id)->get()
+            ProductView::where('id', $product_id)->get()
         );
     }
 

@@ -2655,7 +2655,8 @@ var getProductParams = function getProductParams(callback) {
         items_on_stock: "",
         attachment: null,
         items: 0,
-        attributes: []
+        attributes: [],
+        cart: null
       }
     };
   },
@@ -2736,6 +2737,20 @@ var getProductParams = function getProductParams(callback) {
         name: '404'
       });
     });
+
+    if (user_data) {
+      var user_id = user_data.id;
+      var that = this;
+      _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].getUserCart(user_id).then(function (response) {
+        if (response.data.data.length) {
+          that.cart = response.data.data[0];
+          var cart_palcement = $("#user_cart_container");
+          cart_palcement.html('Кошик [' + that.cart.cart_items.length + ']');
+        } else {
+          that.cart = null;
+        }
+      });
+    }
   },
   //        beforeRouteEnter (to, from, next){
   //            getProductParams( (err, data) => {
@@ -2743,7 +2758,52 @@ var getProductParams = function getProductParams(callback) {
   //            });
   //        },
   methods: {
-    sentToCart: function sentToCart(item) {},
+    addToCart: function addToCart(product) {
+      var _this2 = this;
+
+      if (!user_data) {
+        alert('Щоб додати продукт до кошика - авторизуйтесь.');
+        document.location.href = '/login';
+        return;
+      }
+
+      if (product.items > product.items_on_stock) {
+        alert('В наявності тільки ' + product.items_on_stock + ' шт продукту');
+        return;
+      }
+
+      if (!product.items || product.items == 0 || product.items == '') {
+        alert('Вкажіть кількість продукту');
+        return;
+      }
+
+      this.saving = true;
+
+      if (!this.cart || !this.cart.id) {
+        _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].createCart(user_data.id).then(function (response) {
+          _this2.cart = response.data.data[0];
+          var cart_palcement = $("#user_cart_container");
+          cart_palcement.html('Кошик [' + _this2.cart.cart_items.length + ']');
+
+          _this2.addToCart(product);
+        });
+      } else {
+        _api_catalog__WEBPACK_IMPORTED_MODULE_5__["default"].saveItemToCart(this.cart.id, product.id, product.items).then(function (response) {
+          _this2.cart = response.data.data[0];
+          var cart_palcement = $("#user_cart_container");
+          cart_palcement.html('Кошик [' + _this2.cart.cart_items.length + ']');
+          materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
+            html: 'Продукт додано до кошика'
+          });
+          _this2.saving = false;
+          _this2.product.items_on_stock = _this2.product.items_on_stock - product.items;
+          _this2.product.items = null;
+        })["catch"](function (err) {
+          alert(err.response.data.message);
+          _this2.saving = false;
+        });
+      }
+    },
     returnToCategory: function returnToCategory() {
       this.loaded = false;
       materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
@@ -27880,9 +27940,10 @@ var render = function() {
                           "a",
                           {
                             staticClass: "waves-effect waves-light btn blue",
+                            attrs: { disabled: _vm.saving },
                             on: {
                               click: function($event) {
-                                return _vm.sentToCart(_vm.product)
+                                return _vm.addToCart(_vm.product)
                               }
                             }
                           },

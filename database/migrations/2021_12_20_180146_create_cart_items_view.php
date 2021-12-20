@@ -14,10 +14,13 @@ class CreateCartItemsView extends Migration
     public function up()
     {
         DB::statement("
+          CREATE VIEW v_cart_items AS
+          (
             select ci.product_id, cart.status, sum(ci.count_items) as items_total
             from cart_items ci
             join cart on cart.id = ci.cart_id
             group by ci.product_id, cart.status
+          )
         ");
     }
 

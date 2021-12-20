@@ -9,7 +9,7 @@
 - РСКБД - PostgreSQL
 - Мова реалізації - PHP
 - Веб-фреймворк - Laravel
-- ОРМ - Eloquent
+- ORM - Eloquent
 - UI-фреймворк - Vuejs
 - CSS-фреймворк - MaterializeCSS
 - Хмарний хостінг - Heroku
