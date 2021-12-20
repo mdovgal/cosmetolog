@@ -25,6 +25,10 @@ Route::get('/product/{any}', function () {
     return view('welcome');
 });
 
+//Route::get('/cosmetolog/{any}', function () {
+//    return view('cosmetolog');
+//});
+
 
 Auth::routes();
 
