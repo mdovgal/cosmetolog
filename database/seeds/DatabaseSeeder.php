@@ -1,10 +1,11 @@
 <?php
-require_once('UsersTableSeeder.php');
-require_once('CategoryTableSeeder.php');
-require_once('CountriesTableSeeder.php');
-require_once('BrandsTableSeeder.php');
-require_once('ProductTypesTableSeeder.php');
-require_once('AttributesTableSeeder.php');
+//require_once('UsersTableSeeder.php');
+//require_once('CategoryTableSeeder.php');
+//require_once('CountriesTableSeeder.php');
+//require_once('BrandsTableSeeder.php');
+//require_once('ProductTypesTableSeeder.php');
+//require_once('AttributesTableSeeder.php');
+require_once('surveySeeder.php');
 
 use Illuminate\Database\Seeder;
 
@@ -17,11 +18,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call(UsersTableSeeder::class);
-        $this->call(CategoryTableSeeder::class);
-         $this->call(CountriesTableSeeder::class);
-         $this->call(BrandsTableSeeder::class);
-        $this->call(ProductTypesTableSeeder::class);
-        $this->call(AttributesTableSeeder::class);
+//         $this->call(UsersTableSeeder::class);
+//        $this->call(CategoryTableSeeder::class);
+//         $this->call(CountriesTableSeeder::class);
+//         $this->call(BrandsTableSeeder::class);
+//        $this->call(ProductTypesTableSeeder::class);
+//        $this->call(AttributesTableSeeder::class);
+        $this->call(surveySeeder::class);
     }
 }

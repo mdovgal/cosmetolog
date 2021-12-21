@@ -41,6 +41,7 @@ Route::namespace('Api')->group(function () {
     Route::get('/products/category/{category}', 'ProductController@index');
 //    Route::get('/product/{product}/edit', 'ProductController@find');
     Route::post('/product', 'ProductController@save');
+    Route::post('/survey', 'ProductController@survey');
     Route::put('/product', 'ProductController@update');
     Route::get('/products/{product}', 'ProductController@find');
     Route::delete('/product/{product}', 'ProductController@delete');

@@ -7,10 +7,11 @@
 
 
         <div class="col s3" style="margin-top: 20px;">
-            <a class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;" @click="processSurvey()">
-                <i class="material-icons left">apps</i>
+            <router-link :to="{ name: 'survey', params: {} }" class="waves-effect waves-light btn light-blue add_catalog_head" style="width: 100%;">
+                <i class="material-icons">apps</i>
                 Підібрати догляд
-            </a>
+            </router-link>
+
             <ul class="collapsible">
                 <li v-for="item in catalog" v-if="item.parent_id == 0" :class="{ 'active': item.id == catalog[0].id }"  :key="item.id">
                     <div class="collapsible-header"><i class="material-icons">whatshot</i>
@@ -226,9 +227,6 @@ console.log('~~~> CART after saveItemToCart', this.cart);
                             this.viewProductList(this.selectedCategoryItem);
                         });
                 }
-            },
-            processSurvey(){
-
             },
             viewProductList(category_item){
                 this.loaded = false;

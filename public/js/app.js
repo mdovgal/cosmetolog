@@ -2316,6 +2316,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -2442,7 +2443,6 @@ var getProducts = function getProducts(callback) {
         });
       }
     },
-    processSurvey: function processSurvey() {},
     viewProductList: function viewProductList(category_item) {
       var _this2 = this;
 
@@ -2822,6 +2822,280 @@ var getProductParams = function getProductParams(callback) {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Survey.vue?vue&type=script&defer=defer&lang=js&":
+/*!************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Survey.vue?vue&type=script&defer=defer&lang=js& ***!
+  \************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var materialize_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! materialize-css */ "./node_modules/materialize-css/dist/js/materialize.js");
+/* harmony import */ var materialize_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(materialize_css__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var materialize_css_dist_css_materialize_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! materialize-css/dist/css/materialize.min.css */ "./node_modules/materialize-css/dist/css/materialize.min.css");
+/* harmony import */ var materialize_css_dist_css_materialize_min_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(materialize_css_dist_css_materialize_min_css__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _api_catalog__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../api/catalog */ "./resources/js/api/catalog.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+var $ = jquery__WEBPACK_IMPORTED_MODULE_4___default.a;
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      error_message: null,
+      message: null,
+      is_updated: false,
+      saving: false,
+      catalog: null,
+      survey: {
+        attr1: null,
+        attr2: null,
+        attr3: [],
+        attr4: null,
+        q1: [{
+          title: 'Юна',
+          id: 29
+        }, {
+          title: 'Середньої зрілості',
+          id: 30
+        }, {
+          title: 'Зріла',
+          id: 3
+        }, {
+          title: 'З ознаками старіння',
+          id: 11
+        }],
+        q2: [{
+          title: 'Нормальна',
+          id: 6
+        }, {
+          title: 'Суха',
+          id: 8
+        }, {
+          title: 'Жирна',
+          id: 1
+        }, {
+          title: 'Комбінована',
+          id: 5
+        }],
+        q3: [[{
+          title: 'Зморшки',
+          id: 27
+        }, {
+          title: 'Тускла шкіра',
+          id: 28
+        }, {
+          title: 'Набряклість',
+          id: 26
+        }, {
+          title: 'Зниження тонусу',
+          id: 25
+        }, {
+          title: 'Пігментація',
+          id: 20
+        }], [{
+          title: 'Судинні зірочки',
+          id: 23
+        }, {
+          title: 'Рроздратування шкіри',
+          id: 16
+        }, {
+          title: 'Великі пори',
+          id: 32
+        }, {
+          title: 'Зневодненість',
+          id: 18
+        }, {
+          title: 'Прищі',
+          id: 21
+        }]],
+        q4: [{
+          title: 'Так',
+          id: ''
+        }, {
+          title: 'Ні',
+          id: ''
+        }]
+      }
+    };
+  },
+  mounted: function mounted() {
+    setTimeout(function () {
+      $("#general_loader").hide();
+    }, 50);
+  },
+  updated: function updated() {
+    var elem = document.querySelectorAll('.collapsible');
+    var instances = materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.Collapsible.init(elem);
+  },
+  methods: {
+    onSubmit: function onSubmit($event) {
+      var _this = this;
+
+      this.saving = true;
+      axios__WEBPACK_IMPORTED_MODULE_3___default.a.post('/api/survey', this.survey).then(function (response) {
+        _this.loaded = true;
+        _this.saving = false;
+        console.log('~~~> POST RESPONSE: ', response);
+        _this.catalog = response.data.data;
+      })["catch"](function (error) {
+        _this.saving = false;
+      });
+    },
+    returnToCategory: function returnToCategory() {
+      this.loaded = false;
+      materialize_css__WEBPACK_IMPORTED_MODULE_1___default.a.toast({
+        html: 'Виконується перенаправлення до продуктового каталогу'
+      });
+      this.$router.push({
+        name: 'product.catalog'
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/materialize-css/dist/css/materialize.min.css":
 /*!***************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/materialize-css/dist/css/materialize.min.css ***!
@@ -2873,6 +3147,25 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 // module
 exports.push([module.i, "\n.tabs .indicator{\n    background-color: #0091ea;\n}\n.tabs .tab a:hover{\n    color: black;\n    background-color: white;\n}\n.tabs .tab a{\n    color: black;\n    background-color: white;\n    transition: none !important;\n}\n.tabs .tab a.active {\n    background-color: white;\n    color: black;\n    transition: none !important;\n}\n.tabs .tab a.active:hover {\n    background-color: white;\n    color: black;\n}\n#items_on_stock, #price, #product_name, #items{\n    border-bottom: 1px solid lightgrey !important;\n    box-shadow: 0 1px 0 0 lightgrey !important;\n}\n.tabs .tab a:focus, .tabs .tab a:focus.active{\n    background-color: white;\n}\n.helper-text{\n    position: relative !important;\n    min-height: 18px !important;\n    display: block !important;\n    font-size: 12px !important;\n    color: red !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Survey.vue?vue&type=style&index=0&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--7-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Survey.vue?vue&type=style&index=0&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.tabs .indicator{\n    background-color: #0091ea;\n}\n.tabs .tab a:hover{\n    color: black;\n    background-color: white;\n}\n.tabs .tab a{\n    color: black;\n    background-color: white;\n    transition: none !important;\n}\n.tabs .tab a.active {\n    background-color: white;\n    color: black;\n    transition: none !important;\n}\n.tabs .tab a.active:hover {\n    background-color: white;\n    color: black;\n}\n#items_on_stock, #price, #product_name, #items{\n    border-bottom: 1px solid lightgrey !important;\n    box-shadow: 0 1px 0 0 lightgrey !important;\n}\n.tabs .tab a:focus, .tabs .tab a:focus.active{\n    background-color: white;\n}\n.helper-text{\n    position: relative !important;\n    min-height: 18px !important;\n    display: block !important;\n    font-size: 12px !important;\n    color: red !important;\n}\n.row.survey .row.products_row .card{ width: 440px; min-height: 539px;}\n.row.survey .row.products_row .card-image{width: 442px;}\n.row.survey .btn-floating.halfway-fab.delete{right: 19px;}\n", ""]);
 
 // exports
 
@@ -26710,6 +27003,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Survey.vue?vue&type=style&index=0&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--7-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Survey.vue?vue&type=style&index=0&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--7-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Survey.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Survey.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/lib/addStyles.js":
 /*!****************************************************!*\
   !*** ./node_modules/style-loader/lib/addStyles.js ***!
@@ -27397,19 +27720,15 @@ var render = function() {
       { staticClass: "col s3", staticStyle: { "margin-top": "20px" } },
       [
         _c(
-          "a",
+          "router-link",
           {
             staticClass:
               "waves-effect waves-light btn light-blue add_catalog_head",
             staticStyle: { width: "100%" },
-            on: {
-              click: function($event) {
-                return _vm.processSurvey()
-              }
-            }
+            attrs: { to: { name: "survey", params: {} } }
           },
           [
-            _c("i", { staticClass: "material-icons left" }, [_vm._v("apps")]),
+            _c("i", { staticClass: "material-icons" }, [_vm._v("apps")]),
             _vm._v("\n                Підібрати догляд\n            ")
           ]
         ),
@@ -27497,7 +27816,8 @@ var render = function() {
           }),
           0
         )
-      ]
+      ],
+      1
     ),
     _vm._v(" "),
     _vm.selectedCategoryRecord
@@ -27649,12 +27969,7 @@ var render = function() {
                                                   _c(
                                                     "div",
                                                     { staticClass: "col s6" },
-                                                    [
-                                                      _vm._v(
-                                                        "Ціна, грн :: " +
-                                                          _vm._s(items_on_stock)
-                                                      )
-                                                    ]
+                                                    [_vm._v("Ціна, грн")]
                                                   )
                                                 ]
                                               )
@@ -28043,6 +28358,508 @@ var staticRenderFns = [
             _vm._v("Склад")
           ])
         ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Survey.vue?vue&type=template&id=e35db78e&":
+/*!****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Survey.vue?vue&type=template&id=e35db78e& ***!
+  \****************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "row survey" }, [
+    _vm.catalog
+      ? _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col s12" }, [
+            _c("div", { staticClass: "row" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "ul",
+                { staticClass: "collapsible" },
+                _vm._l(_vm.catalog, function(product_type, index) {
+                  return _c("li", [
+                    _c("div", { staticClass: "collapsible-header" }, [
+                      _c("i", { staticClass: "material-icons" }, [
+                        _vm._v("filter_drama")
+                      ]),
+                      _vm._v(_vm._s(index))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "collapsible-body" },
+                      _vm._l(product_type, function(row) {
+                        return _c(
+                          "div",
+                          { staticClass: "row products_row" },
+                          _vm._l(row, function(ref) {
+                            var id = ref.id
+                            var image = ref.image
+                            var title = ref.title
+                            var short_description = ref.short_description
+                            var price = ref.price
+                            var items_on_stock = ref.items_on_stock
+                            return _c("div", { staticClass: "col s4" }, [
+                              _c("div", { staticClass: "card" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "card-image" },
+                                  [
+                                    image
+                                      ? _c("img", { attrs: { src: image } })
+                                      : _c("img", {
+                                          attrs: {
+                                            src: "/img/product_placeholder.png"
+                                          }
+                                        }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "router-link",
+                                      {
+                                        staticClass:
+                                          "btn-floating halfway-fab waves-effect waves-light blue delete",
+                                        attrs: {
+                                          to: {
+                                            name: "product.view",
+                                            params: { id: id }
+                                          },
+                                          target: "_blank"
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "i",
+                                          { staticClass: "material-icons" },
+                                          [_vm._v("description")]
+                                        )
+                                      ]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "card-content" }, [
+                                  _c("h6", [_c("b", [_vm._v(_vm._s(title))])]),
+                                  _vm._v(" "),
+                                  _c("div", {
+                                    staticClass: "row short_description",
+                                    domProps: {
+                                      innerHTML: _vm._s(short_description)
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  items_on_stock
+                                    ? _c("div", { staticClass: "row price" }, [
+                                        _c("div", { staticClass: "col s6" }),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "col s6" }, [
+                                          _vm._v("Ціна, грн")
+                                        ])
+                                      ])
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "row price" }, [
+                                    _c("div", { staticClass: "col s6" }),
+                                    _vm._v(" "),
+                                    items_on_stock
+                                      ? _c("div", { staticClass: "col s6" }, [
+                                          _c("b", [_vm._v(_vm._s(price))])
+                                        ])
+                                      : _c(
+                                          "div",
+                                          { staticClass: "col s6 red-text" },
+                                          [_vm._v("Немає на складі")]
+                                        )
+                                  ])
+                                ])
+                              ])
+                            ])
+                          }),
+                          0
+                        )
+                      }),
+                      0
+                    )
+                  ])
+                }),
+                0
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col s2", staticStyle: { margin: "0px 15px" } },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "waves-effect waves-light btn blue lighten-4",
+                  on: {
+                    click: function($event) {
+                      return _vm.returnToCategory()
+                    }
+                  }
+                },
+                [_vm._v("\n            Повернутись до каталогу\n            ")]
+              )
+            ]
+          )
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    !_vm.catalog
+      ? _c("div", { staticClass: "row" }, [
+          _c(
+            "form",
+            {
+              attrs: { method: "post", enctype: "multipart/form-data" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.onSubmit($event)
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "col s12" }, [
+                _c(
+                  "div",
+                  { staticClass: "row" },
+                  [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "row" },
+                      _vm._l(_vm.survey.q1, function(item) {
+                        return _c("div", { staticClass: "col" }, [
+                          _c("label", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.survey.attr1,
+                                  expression: "survey.attr1"
+                                }
+                              ],
+                              staticClass: "with-gap",
+                              attrs: { name: "q1", type: "radio" },
+                              domProps: {
+                                value: item.id,
+                                checked: _vm._q(_vm.survey.attr1, item.id)
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(_vm.survey, "attr1", item.id)
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v(_vm._s(item.title))])
+                          ])
+                        ])
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _vm._m(3),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "row" },
+                      _vm._l(_vm.survey.q2, function(item) {
+                        return _c("div", { staticClass: "col" }, [
+                          _c("label", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.survey.attr2,
+                                  expression: "survey.attr2"
+                                }
+                              ],
+                              staticClass: "with-gap",
+                              attrs: { name: "q2", type: "radio" },
+                              domProps: {
+                                value: item.id,
+                                checked: _vm._q(_vm.survey.attr2, item.id)
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(_vm.survey, "attr2", item.id)
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v(_vm._s(item.title))])
+                          ])
+                        ])
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _vm._m(4),
+                    _vm._v(" "),
+                    _vm._l(_vm.survey.q3, function(row) {
+                      return _c(
+                        "div",
+                        { staticClass: "row" },
+                        _vm._l(row, function(item, index) {
+                          return _c("div", { staticClass: "col" }, [
+                            _c("label", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.survey.attr3,
+                                    expression: "survey.attr3"
+                                  }
+                                ],
+                                attrs: { type: "checkbox" },
+                                domProps: {
+                                  value: item.id,
+                                  checked: Array.isArray(_vm.survey.attr3)
+                                    ? _vm._i(_vm.survey.attr3, item.id) > -1
+                                    : _vm.survey.attr3
+                                },
+                                on: {
+                                  change: function($event) {
+                                    var $$a = _vm.survey.attr3,
+                                      $$el = $event.target,
+                                      $$c = $$el.checked ? true : false
+                                    if (Array.isArray($$a)) {
+                                      var $$v = item.id,
+                                        $$i = _vm._i($$a, $$v)
+                                      if ($$el.checked) {
+                                        $$i < 0 &&
+                                          _vm.$set(
+                                            _vm.survey,
+                                            "attr3",
+                                            $$a.concat([$$v])
+                                          )
+                                      } else {
+                                        $$i > -1 &&
+                                          _vm.$set(
+                                            _vm.survey,
+                                            "attr3",
+                                            $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1))
+                                          )
+                                      }
+                                    } else {
+                                      _vm.$set(_vm.survey, "attr3", $$c)
+                                    }
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("span", [_vm._v(_vm._s(item.title))])
+                            ])
+                          ])
+                        }),
+                        0
+                      )
+                    }),
+                    _vm._v(" "),
+                    _vm._m(5),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "row" },
+                      _vm._l(_vm.survey.q4, function(item) {
+                        return _c("div", { staticClass: "col" }, [
+                          _c("label", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.survey.attr4,
+                                  expression: "survey.attr4"
+                                }
+                              ],
+                              staticClass: "with-gap",
+                              attrs: { name: "q4", type: "radio" },
+                              domProps: {
+                                value: item.id,
+                                checked: _vm._q(_vm.survey.attr4, item.id)
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(_vm.survey, "attr4", item.id)
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v(_vm._s(item.title))])
+                          ])
+                        ])
+                      }),
+                      0
+                    )
+                  ],
+                  2
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col s12" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "col s2",
+                    staticStyle: { margin: "0px 15px" }
+                  },
+                  [
+                    _c(
+                      "a",
+                      {
+                        staticClass:
+                          "waves-effect waves-light btn blue-grey lighten-4",
+                        on: {
+                          click: function($event) {
+                            return _vm.returnToCategory()
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                Повернутись до каталогу\n                "
+                        )
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "col s2",
+                    staticStyle: { margin: "0px 15px" }
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "waves-effect waves-light btn light-blue",
+                        attrs: { type: "submit", disabled: _vm.saving }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(
+                              _vm.saving
+                                ? "Відправляється..."
+                                : "Відправити анкету"
+                            ) +
+                            "\n                "
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ])
+            ]
+          )
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col s12" }, [
+      _c(
+        "blockquote",
+        { staticStyle: { "border-left": "5px solid #80d8ff" } },
+        [
+          _c("h5", { staticStyle: { "margin-top": "42px" } }, [
+            _vm._v(
+              "Рекомендовані наступні засоби для догляду за шкірою обличчя"
+            )
+          ])
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col s12" }, [
+      _c(
+        "blockquote",
+        { staticStyle: { "border-left": "5px solid #80d8ff" } },
+        [
+          _c("h5", { staticStyle: { "margin-top": "42px" } }, [
+            _vm._v("Анкета для підбору догляду за шкірою обличчя")
+          ])
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col s12" }, [
+      _c("h6", { staticStyle: { "margin-top": "42px" } }, [
+        _vm._v("Ваша вікова група")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col s12" }, [
+      _c("h6", { staticStyle: { "margin-top": "42px" } }, [
+        _vm._v("Ваш тип шкіри")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col s12" }, [
+      _c("h6", { staticStyle: { "margin-top": "42px" } }, [
+        _vm._v("Поточні проблеми")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col s12" }, [
+      _c("h6", { staticStyle: { "margin-top": "42px" } }, [
+        _vm._v("Алергічні реакції")
       ])
     ])
   }
@@ -43385,11 +44202,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _views_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./views/App */ "./resources/js/views/App.vue");
 /* harmony import */ var _views_ProductCatalog__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./views/ProductCatalog */ "./resources/js/views/ProductCatalog.vue");
 /* harmony import */ var _views_ProductView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./views/ProductView */ "./resources/js/views/ProductView.vue");
-/* harmony import */ var _views_NotFound__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./views/NotFound */ "./resources/js/views/NotFound.vue");
+/* harmony import */ var _views_Survey__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./views/Survey */ "./resources/js/views/Survey.vue");
+/* harmony import */ var _views_NotFound__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./views/NotFound */ "./resources/js/views/NotFound.vue");
 //require('./bootstrap');
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
 
 
 
@@ -43412,10 +44231,14 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     path: '/cart',
     name: 'products.catalog',
     component: _views_ProductCatalog__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },, {
+    path: '/survey',
+    name: 'survey',
+    component: _views_Survey__WEBPACK_IMPORTED_MODULE_5__["default"]
   }, {
     path: '/404',
     name: '404',
-    component: _views_NotFound__WEBPACK_IMPORTED_MODULE_5__["default"]
+    component: _views_NotFound__WEBPACK_IMPORTED_MODULE_6__["default"]
   }]
 });
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
@@ -43719,6 +44542,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductView_vue_vue_type_template_id_25875c36___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductView_vue_vue_type_template_id_25875c36___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/views/Survey.vue":
+/*!***************************************!*\
+  !*** ./resources/js/views/Survey.vue ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Survey_vue_vue_type_template_id_e35db78e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Survey.vue?vue&type=template&id=e35db78e& */ "./resources/js/views/Survey.vue?vue&type=template&id=e35db78e&");
+/* harmony import */ var _Survey_vue_vue_type_script_defer_defer_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Survey.vue?vue&type=script&defer=defer&lang=js& */ "./resources/js/views/Survey.vue?vue&type=script&defer=defer&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Survey_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Survey.vue?vue&type=style&index=0&lang=css& */ "./resources/js/views/Survey.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _Survey_vue_vue_type_script_defer_defer_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Survey_vue_vue_type_template_id_e35db78e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Survey_vue_vue_type_template_id_e35db78e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/Survey.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/Survey.vue?vue&type=script&defer=defer&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/views/Survey.vue?vue&type=script&defer=defer&lang=js& ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_script_defer_defer_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Survey.vue?vue&type=script&defer=defer&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Survey.vue?vue&type=script&defer=defer&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_script_defer_defer_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/Survey.vue?vue&type=style&index=0&lang=css&":
+/*!************************************************************************!*\
+  !*** ./resources/js/views/Survey.vue?vue&type=style&index=0&lang=css& ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--7-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Survey.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Survey.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+
+
+/***/ }),
+
+/***/ "./resources/js/views/Survey.vue?vue&type=template&id=e35db78e&":
+/*!**********************************************************************!*\
+  !*** ./resources/js/views/Survey.vue?vue&type=template&id=e35db78e& ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_template_id_e35db78e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Survey.vue?vue&type=template&id=e35db78e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Survey.vue?vue&type=template&id=e35db78e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_template_id_e35db78e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Survey_vue_vue_type_template_id_e35db78e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

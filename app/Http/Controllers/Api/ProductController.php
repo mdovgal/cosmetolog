@@ -109,6 +109,47 @@ class ProductController extends Controller
         return new ProductResource( $current_product );
     }
 
+    public function survey(Request $request){
+//dd( get_class_methods($request) );
+        $params = [];
+        if($request->input('attr1')){
+            $params[] = $request->input('attr1');
+        }
+        if($request->input('attr2')){
+            $params[] = $request->input('attr2');
+        }
+        if($request->input('attr3')){
+            foreach($request->input('attr3') as $item){
+                $params[] = $item;
+            }
+        }
+
+        $params = array_unique($params);
+
+        $productsWithAttributes = ProductAttributes::whereIn('attribute_id', $params)->get()->toArray();
+        $products_id = array_column($productsWithAttributes, 'product_id');
+        $products_id = array_unique($products_id);
+//dd($products_id, $productsWithAttributes);
+
+        $productsItems = ProductView::whereIn('id', $products_id)
+            ->orderBy('title', 'asc')
+            ->get()
+        ;
+//dd($productsItems);
+        $productsItems = $productsItems
+            ->groupBy('type_title')
+            ->map(function ($subCollection) {
+                return $subCollection->chunk(3); // put your group size
+            });
+        ;
+
+
+        $all_collections = collect([
+            'data' => $productsItems]);
+        return $all_collections;
+dd($request->input('attr1'),$request->input('attr2'),$request->input('attr3'),$request->input('attr4'), $params);
+    }
+
     public function save(Request $request)
     {
         $data = $request->validate([

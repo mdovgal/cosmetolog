@@ -143,7 +143,7 @@
                         <div class="row" v-for="item in group">
                             <div class="col s3" v-for="{id, title} in item">
                                 <label>
-                                    <input type="checkbox" :value="id"  v-model="product.attributes"/>
+                                    <input type="checkbox" :value="id" v-model="product.attributes"/>
                                     <span>{{title}}</span>
                                 </label>
                             </div>

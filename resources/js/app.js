@@ -7,6 +7,7 @@ Vue.use(VueRouter)
 import App from './views/App'
 import ProductCatalog from './views/ProductCatalog'
 import ProductView from './views/ProductView'
+import Survey from './views/Survey'
 import NotFound from './views/NotFound'
 
 const router = new VueRouter({
@@ -19,6 +20,8 @@ const router = new VueRouter({
         {path: '/products/category/:catalog_id', name: 'products.catalog',component: ProductCatalog
         },
         {path: '/cart', name: 'products.catalog',component: ProductCatalog
+        },,
+        {path: '/survey', name: 'survey',component: Survey
         },
         { path: '/404', name: '404', component: NotFound },
     ],
