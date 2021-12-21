@@ -50,7 +50,7 @@
 
                 </div>
             </div>
-            <div class="col s2" style="margin: 0px 15px;">
+            <div class="col s3" style="margin: 0px 15px;">
                 <a class="waves-effect waves-light btn blue lighten-4" @click="returnToCategory()">
                 Повернутись до каталогу
                 </a>
