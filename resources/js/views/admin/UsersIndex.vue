@@ -4,17 +4,18 @@
             <p>{{ error }}</p>
         </div>
         <div v-if="message" class="alert alert-success">{{ message }}</div>
-        <div v-if="! loaded">Завантаження...</div>
+        <div class="progress" v-if="!loaded">
+            <div class="indeterminate"></div>
+        </div>
 
         <div class="col-md-12 add_author">
-            <router-link :to="{ name: 'users.create' }" tag="button" class="btn btn-primary" :disabled="saving">Новий автор</router-link>
+            <router-link :to="{ name: 'users.create' }" tag="button" class="btn btn-primary blue" :disabled="saving">Новий аккаунт</router-link>
         </div>
 
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Автор</th>
+                <th scope="col">Ім'я косметологу</th>
                 <th scope="col">email</th>
                 <th scope="col">К-ть статтей</th>
                 <th scope="col"></th>
@@ -22,18 +23,15 @@
             </thead>
             <tbody v-if="users">
             <tr v-for="{ id, name, email, role, articles } in users">
-                <th scope="row">{{ id }}</th>
-                <td>{{ name }}</td>
-                <td>{{ email }}</td>
-                <td>{{ count_articles(articles) }}</td>
+                <td style="vertical-align: top;">{{ name }}</td>
+                <td style="vertical-align: top;">{{ email }}</td>
+                <td style="vertical-align: top;">{{ count_articles(articles) }}</td>
                 <td>
-                    <router-link :to="{ name: 'article.add', params: { id } }"  tag="button" class="btn btn-primary" :disabled="saving" >
-                        Додати статтю</router-link>
-                    <router-link :to="{ name: 'users.edit', params: { id } }"  tag="button" class="btn btn-success" :disabled="saving" >
+                    <router-link :to="{ name: 'users.edit', params: { id } }"  tag="button" class="btn btn-success blue" :disabled="saving" >
                         Редагувати</router-link>
-                    <button @click="onDelete({ id })" class="btn btn-danger" :disabled="saving" >Видалити</button><br />
+                    <button @click="onDelete({ id })" class="btn blue" :disabled="saving" >Видалити</button><br />
                     <div v-if="count_articles(articles)">
-                        <span>Статті автора:</span>
+                        <h6><b>Статті:</b></h6>
                         <ul >
                             <li v-for="{ title } in articles">{{ title }}</li>
                         </ul>
@@ -42,32 +40,15 @@
             </tr>
             </tbody>
         </table>
-
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="#" :disabled="! prevPage" @click.prevent="goToPrev">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">
-                    {{ paginatonCount }}
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#" :disabled="! nextPage" @click.prevent="goToNext">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
     </div>
 </template>
 <script>
+    import Vue from 'vue';
+    import M from 'materialize-css';
+    import 'materialize-css/dist/css/materialize.min.css';
     import axios from 'axios';
+    import JQuery from 'jquery';
+    let $ = JQuery;
 
     const getUsers = (page, callback) => {
         const params = { page };
@@ -135,6 +116,17 @@
                 next();
             });
         },
+        mounted(){
+            setTimeout(() => {
+                $("menu a").each(function(){
+                    if($(this).hasClass('active')) $(this).removeClass('active');
+                });
+                var current_menu_item = $("#cosmetolog_section");
+                if(!current_menu_item.hasClass('active'))current_menu_item.addClass('active');
+
+                $("#general_loader").hide();
+            }, 50);
+        },
         methods: {
             count_articles: function(articles){
                 return articles.length;
@@ -155,12 +147,14 @@
                 });
             },
             onDelete(obj){
-                if(confirm('Ви дійсно бажаєте видалити автора та його статті?')){
+                if(confirm('Ви дійсно бажаєте видалити аккаунт та його статті?')){
                     this.saving = true;
+                    this.loaded = false;
                     axios
                         .delete(`/api/users/` + obj.id)
                         .then(response => {
-                            this.message = 'Автор виделен';
+                            M.toast({html: 'Аккаунт виделен'})
+                            this.loaded = true;
                             setTimeout(() => {this.message = null; this.saving}, 1500);
                             this.$router.go();
                         });

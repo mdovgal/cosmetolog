@@ -28506,7 +28506,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "col s2", staticStyle: { margin: "0px 15px" } },
+            { staticClass: "col s3", staticStyle: { margin: "0px 15px" } },
             [
               _c(
                 "a",
@@ -44620,7 +44620,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!**********************************************************************!*\
   !*** ./resources/js/views/Survey.vue?vue&type=template&id=e35db78e& ***!
   \**********************************************************************/
-/*! no static exports found */
+/*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

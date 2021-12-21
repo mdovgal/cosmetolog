@@ -2,12 +2,15 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header alert-info">Редагувати автора</div>
+
+                    <h5>Редагувати аккаунт косметолога</h5>
+                    <div class="progress" v-if="!loaded">
+                        <div class="indeterminate"></div>
+                    </div>
+
                     <div class="card-body">
                         <div v-if="error_message" class="alert alert-danger">{{ error_message }}</div>
                         <div v-if="message" class="alert alert-success">{{ message }}</div>
-                        <div v-if="! loaded">Завантаження...</div>
                         <form @submit.prevent="onSubmit($event)" v-else>
                             <div class="form-group row">
                                 <label for="user_name" class="col-md-4 col-form-label text-md-right">
@@ -28,20 +31,27 @@
                             </div>
 
                             <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn _btn-primary_ btn-success" :disabled="saving">Зберегти</button>
-                                    <button class="btn btn-danger" :disabled="saving" @click.prevent="onDelete($event)">Видалити</button>
-                                    <button class="btn btn-link" :disabled="saving" @click.prevent="onReturn($event)">Повернутися</button>
+                                <div class="col-md-6 offset-md-4 .right-align">
+                                    <button type="submit" class="btn _btn-primary_ btn-success blue" :disabled="saving">Зберегти</button>
+                                    <button class="btn btn-danger blue" :disabled="saving" @click.prevent="onDelete($event)">Видалити</button>
+                                    <button class="btn btn-link blue" :disabled="saving" @click.prevent="onReturn($event)">Повернутися</button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                </div>
+
             </div>
         </div>
     </div>
 </template>
 <script>
+    import Vue from 'vue';
+    import M from 'materialize-css';
+    import 'materialize-css/dist/css/materialize.min.css';
+    import axios from 'axios';
+    import JQuery from 'jquery';
+    let $ = JQuery;
+
     import api from '../../api/users';
 
     export default {
@@ -58,16 +68,29 @@
                 }
             };
         },
+        mounted(){
+            setTimeout(() => {
+                $("menu a").each(function(){
+                    if($(this).hasClass('active')) $(this).removeClass('active');
+                });
+                var current_menu_item = $("#cosmetolog_section");
+                if(!current_menu_item.hasClass('active'))current_menu_item.addClass('active');
+
+                $("#general_loader").hide();
+            }, 50);
+        },
         methods: {
             onSubmit(event){
                 this.saving = true;
+                this.loaded = false;
                 this.error_message = null;
 
                 api.update(this.user.id, {
                     name: this.user.name,
                     email: this.user.email,
                 }).then((response) => {
-                    this.message = 'Автор відредагован';
+                    this.loaded = true;
+                    M.toast({html: 'Аккаунт відредагован'});
                     setTimeout(() => this.message = null, 2000);
                     this.user = response.data.data;
                 }).catch(error => {
@@ -75,19 +98,22 @@
                 }).then(() => this.saving = false);
             },
             onDelete() {
-                if(confirm('Ви дійсно бажаєте видалити автора та його статті?')){
+                if(confirm('Ви дійсно бажаєте видалити аккаунт та його статті?')){
                     this.saving = true;
+                    this.loaded = false;
 
                     api.delete(this.user.id)
                         .then((response) => {
-                        this.message = 'Автор виделен';
+                        M.toast({html: 'Аккаунт виделен'});
+                        this.loaded = true;
                         this.$router.push({ name: 'users.index' });
                     });
                 }
             },
             onReturn(){
                 this.saving = true;
-                this.$router.push({ name: 'users.index' });
+                this.loaded = false;
+                this.$router.push({ name: 'cosmetologs.list' });
             }
         },
         created(){
@@ -100,3 +126,9 @@
         }
     };
 </script>
+<style>
+    #user_name, #user_email{
+        border-bottom: 1px solid lightgrey !important;
+        box-shadow: 0 1px 0 0 lightgrey !important;
+    }
+</style>

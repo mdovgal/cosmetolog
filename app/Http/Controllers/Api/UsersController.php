@@ -55,7 +55,7 @@ class UsersController extends Controller
 
         return new UserResource(User::create([
             //'role' => $data['role'],
-            'role' => 'custm',
+            'role' => 'cosmt',
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),

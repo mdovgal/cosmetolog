@@ -34,7 +34,7 @@ const router = new VueRouter({
         },
         {path: '/admin/product/:id/edit', name: 'product.edit', component: ProductEdit
         },
-        {path: '/admin/cosmetologs', name: 'cosmetologs.list',component: CosmetologsList
+        {path: '/admin/cosmetologs', name: 'cosmetologs.list',component: UsersIndex
         },
         {path: '/admin/customers', name: 'customers.list',component: CustomersList
         },
@@ -44,8 +44,6 @@ const router = new VueRouter({
         },
 
 // ---------- old --------------------------------
-        {path: '/admin/users', name: 'users.index',component: UsersIndex
-        },
         {path: '/admin/hello', name: 'hello', component: Hello,
         },
         {path: '/admin/users/create', name: 'users.create', component: UsersCreate,
