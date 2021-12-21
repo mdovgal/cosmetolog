@@ -228,8 +228,4 @@ console.log('~~~> POST RESPONSE: ', response);
         display: block !important;
         font-size: 12px !important;
         color: red !important; }
-
-    .row.survey .row.products_row .card{ width: 440px; min-height: 539px;}
-    .row.survey .row.products_row .card-image{width: 442px;}
-    .row.survey .btn-floating.halfway-fab.delete{right: 19px;}
 </style>
